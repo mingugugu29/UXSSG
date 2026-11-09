@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1800" viewBox="0 0 1440 1800">
+<rect width="1440" height="1800" fill="#FAF8F6"/>
+<defs><style>
+.tiny{font:600 13px Pretendard,'Apple SD Gothic Neo',sans-serif;letter-spacing:1.5px;fill:#7E63A8}
+.h1{font:700 38px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.h2{font:700 24px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.h3{font:700 17px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.body{font:400 15px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.small{font:400 13px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#6C6577}
+.cap{font:400 11px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#8C8796}
+.white{fill:#FFFFFF}
+</style></defs>
+<text x="72" y="62" class="tiny">WOORI SAI  /  DESIGN SYSTEM 2.0</text>
+<text x="72" y="122" class="h1">Components</text>
+<text x="72" y="158" class="small">한국형 모바일 앱에서 익숙한 버튼·입력·칩·카드·내비게이션 컴포넌트</text>
+<text x="1330" y="62" class="cap" text-anchor="end">02 / COMPONENTS</text>
+<line x1="72" y1="190" x2="1368" y2="190" stroke="#ECE6EF" stroke-width="2"/>
+<text x="72" y="250" class="tiny">01  BUTTONS</text>
+<text x="72" y="290" class="h2">버튼</text>
+<rect x="72" y="320" width="220" height="48" rx="14" fill="#7E63A8"/>
+<text x="118" y="351" class="body" style="fill:#FFFFFF">추억 기록하기</text>
+<rect x="312" y="324" width="180" height="40" rx="10" fill="#FFFFFF" stroke="#E6DFEB" stroke-width="1.5"/>
+<text x="372" y="350" class="small" style="fill:#7E63A8">취소</text>
+<rect x="512" y="324" width="180" height="40" rx="10" fill="#F3EDF9"/>
+<text x="562" y="350" class="small" style="fill:#7E63A8">더 보기</text>
+<rect x="712" y="320" width="52" height="52" rx="26" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<text x="731" y="355" class="h2" style="fill:#6C6577">×</text>
+<text x="72" y="400" class="small">Primary 48px / Secondary 40px / Icon 38px 이상 / 버튼 문구는 짧고 행동 중심</text>
+<text x="72" y="470" class="tiny">02  INPUTS</text>
+<text x="72" y="510" class="h2">입력 필드</text>
+<rect x="72" y="540" width="400" height="46" rx="10" fill="#FFFFFF" stroke="#E3DBE9" stroke-width="1.5"/>
+<text x="90" y="569" class="small">추억의 제목을 입력해 주세요</text>
+<rect x="492" y="540" width="400" height="46" rx="10" fill="#FFFFFF" stroke="#7E63A8" stroke-width="1.5"/>
+<text x="510" y="569" class="body">날짜 선택</text>
+<rect x="912" y="540" width="400" height="92" rx="10" fill="#FFFFFF" stroke="#E3DBE9" stroke-width="1.5"/>
+<text x="930" y="570" class="small">그날의 이야기를 적어주세요</text>
+<text x="930" y="600" class="cap">여러 줄 입력이 가능한 영역</text>
+<text x="72" y="665" class="tiny">03  CHIPS &amp; STATUS</text>
+<text x="72" y="705" class="h2">칩과 상태</text>
+<rect x="72" y="735" width="150" height="30" rx="15" fill="#F3EDF9"/>
+<text x="84" y="755" class="cap" style="fill:#59466F">고등학교 친구들</text>
+<rect x="236" y="735" width="112" height="30" rx="15" fill="#FDF5DD"/>
+<text x="248" y="755" class="cap" style="fill:#7A5E14">여행</text>
+<rect x="362" y="735" width="112" height="30" rx="15" fill="#EAF4F9"/>
+<text x="374" y="755" class="cap" style="fill:#2F6380">댓글 3</text>
+<rect x="488" y="735" width="112" height="30" rx="15" fill="#E8F5EE"/>
+<text x="500" y="755" class="cap" style="fill:#2F6B4D">참석 예정</text>
+<rect x="614" y="735" width="112" height="30" rx="15" fill="#FDF5DD"/>
+<text x="626" y="755" class="cap" style="fill:#7A5E14">대기 중</text>
+<text x="72" y="825" class="tiny">04  CONTENT CARDS</text>
+<text x="72" y="865" class="h2">콘텐츠 카드</text>
+<rect x="72" y="895" width="590" height="160" rx="18" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="88" y="911" width="112" height="112" rx="14" fill="#F3EDF9"/>
+<text x="122" y="976" class="h3" style="fill:#7E63A8">사진</text>
+<text x="220" y="938" class="cap" style="fill:#7E63A8">2026. 04. 18  ·  고등학교 친구들</text>
+<text x="220" y="970" class="h3">우리의 봄 소풍</text>
+<text x="220" y="1000" class="small">그날 찍은 사진과 짧은 이야기</text>
+<text x="220" y="1030" class="cap">댓글 3  ·  공감 5</text>
+<rect x="700" y="895" width="612" height="72" rx="14" fill="#FDF5DD"/>
+<text x="722" y="925" class="h3" style="fill:#7A5E14">약속 알림</text>
+<text x="722" y="950" class="small" style="fill:#7A5E14">이번 주 토요일, 모임이 있어요.</text>
+<rect x="700" y="985" width="612" height="70" rx="14" fill="#FCEDED"/>
+<text x="722" y="1015" class="h3" style="fill:#9A4A4A">월간 결산</text>
+<text x="722" y="1040" class="small" style="fill:#9A4A4A">이번 달의 기록을 모아봤어요.</text>
+<text x="72" y="1130" class="tiny">05  AVATAR &amp; REACTION</text>
+<text x="72" y="1170" class="h2">프로필과 공감</text>
+<circle cx="105" cy="1230" r="26" fill="#F2B8B8" stroke="#FFFFFF" stroke-width="4"/>
+<circle cx="179" cy="1230" r="26" fill="#F4D58D" stroke="#FFFFFF" stroke-width="4"/>
+<circle cx="253" cy="1230" r="26" fill="#B9D8E8" stroke="#FFFFFF" stroke-width="4"/>
+<circle cx="327" cy="1230" r="26" fill="#D5C2E8" stroke="#FFFFFF" stroke-width="4"/>
+<circle cx="401" cy="1230" r="26" fill="#BFE3D0" stroke="#FFFFFF" stroke-width="4"/>
+<rect x="520" y="1215" width="132" height="32" rx="16" fill="#FCEDED"/>
+<text x="534" y="1236" class="cap" style="fill:#9A4A4A">좋아요</text>
+<rect x="675" y="1215" width="132" height="32" rx="16" fill="#F3EDF9"/>
+<text x="689" y="1236" class="cap" style="fill:#59466F">최고</text>
+<rect x="830" y="1215" width="132" height="32" rx="16" fill="#FDF5DD"/>
+<text x="844" y="1236" class="cap" style="fill:#7A5E14">웃겨요</text>
+<text x="72" y="1340" class="tiny">06  NAVIGATION &amp; SHEET</text>
+<text x="72" y="1380" class="h2">하단 탭과 바텀시트</text>
+<rect x="72" y="1410" width="1240" height="78" rx="16" fill="#FFFDFB" stroke="#ECE6EF" stroke-width="1.5"/>
+<text x="170" y="1445" class="h2" style="fill:#8C8796">⌂</text>
+<text x="165" y="1472" class="cap" style="fill:#8C8796">홈</text>
+<text x="410" y="1445" class="h2" style="fill:#8C8796">▦</text>
+<text x="405" y="1472" class="cap" style="fill:#8C8796">캘린더</text>
+<text x="650" y="1445" class="h2" style="fill:#7E63A8">+</text>
+<text x="645" y="1472" class="cap" style="fill:#7E63A8">기록</text>
+<text x="890" y="1445" class="h2" style="fill:#8C8796">♡</text>
+<text x="885" y="1472" class="cap" style="fill:#8C8796">약속</text>
+<text x="1130" y="1445" class="h2" style="fill:#8C8796">●</text>
+<text x="1125" y="1472" class="cap" style="fill:#8C8796">모임</text>
+<rect x="72" y="1520" width="600" height="190" rx="26" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="352" y="1530" width="40" height="5" rx="3" fill="#E3DBE9"/>
+<text x="100" y="1580" class="h3">추억 기록하기</text>
+<text x="100" y="1615" class="small">제목 · 날짜 · 사진 · 이야기 입력</text>
+<rect x="100" y="1640" width="540" height="44" rx="14" fill="#7E63A8"/>
+<text x="315" y="1668" class="body" style="fill:#FFFFFF">저장하기</text>
+<text x="720" y="1580" class="small">하단 탭 5개 · 활성 탭은 보라색</text>
+<text x="720" y="1615" class="small">바텀시트는 하단에서 올라오며</text>
+<text x="720" y="1645" class="small">최대 높이 92% · 상단 radius 26px</text>
+</svg>

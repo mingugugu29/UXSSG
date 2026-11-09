@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1800" viewBox="0 0 1440 1800">
+<rect width="1440" height="1800" fill="#FAF8F6"/>
+<defs><style>
+.tiny{font:600 13px Pretendard,'Apple SD Gothic Neo',sans-serif;letter-spacing:1.5px;fill:#7E63A8}
+.h1{font:700 38px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.h2{font:700 24px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.h3{font:700 17px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.body{font:400 15px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#3A3346}
+.small{font:400 13px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#6C6577}
+.cap{font:400 11px Pretendard,'Apple SD Gothic Neo',sans-serif;fill:#8C8796}
+.white{fill:#FFFFFF}
+</style></defs>
+<text x="72" y="62" class="tiny">WOORI SAI  /  DESIGN SYSTEM 2.0</text>
+<text x="72" y="122" class="h1">Screen Patterns</text>
+<text x="72" y="158" class="small">현재 HTML의 정보 구조를 한국형 모바일 UI 패턴으로 정돈한 화면 설계 가이드</text>
+<text x="1330" y="62" class="cap" text-anchor="end">03 / SCREEN PATTERNS</text>
+<line x1="72" y1="190" x2="1368" y2="190" stroke="#ECE6EF" stroke-width="2"/>
+<text x="72" y="250" class="tiny">01  HOME / CALENDAR + FEED</text>
+<text x="72" y="290" class="h2">홈 화면 패턴</text>
+<rect x="72" y="320" width="340" height="690" rx="28" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="72" y="320" width="340" height="62" rx="28" fill="#FFFDFB"/>
+<text x="94" y="355" class="h3">우리 사이  ▾</text>
+<text x="94" y="420" class="h2">우리의 4월</text>
+<text x="94" y="452" class="cap">친구들과 남긴 순간을 모아봤어요</text>
+<rect x="94" y="478" width="296" height="210" rx="16" fill="#F3EDF9"/>
+<text x="116" y="515" class="h3">2026년 4월</text>
+<rect x="110" y="535" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="148" y="535" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="186" y="535" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="224" y="535" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="262" y="535" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="300" y="535" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="338" y="535" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="110" y="575" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="148" y="575" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="186" y="575" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="224" y="575" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="262" y="575" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="300" y="575" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="338" y="575" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="110" y="615" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="148" y="615" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="186" y="615" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="224" y="615" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="262" y="615" width="30" height="30" rx="8" fill="#E8F5EE"/>
+<rect x="300" y="615" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<rect x="338" y="615" width="30" height="30" rx="8" fill="#FFFFFF"/>
+<text x="94" y="725" class="h3">이달의 기록</text>
+<rect x="94" y="745" width="296" height="86" rx="14" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="106" y="757" width="62" height="62" rx="10" fill="#FCEDED"/>
+<text x="180" y="780" class="h3">봄 소풍</text>
+<text x="180" y="805" class="cap">사진 8 · 댓글 3</text>
+<rect x="94" y="850" width="296" height="86" rx="14" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="106" y="862" width="62" height="62" rx="10" fill="#EAF4F9"/>
+<text x="180" y="885" class="h3">우리의 저녁</text>
+<text x="180" y="910" class="cap">사진 5 · 댓글 2</text>
+<rect x="72" y="946" width="340" height="64" rx="0" fill="#FFFDFB" stroke="#ECE6EF" stroke-width="1.5"/>
+<text x="106" y="980" class="cap" style="fill:#7E63A8">홈     캘린더      +      약속      모임</text>
+<text x="470" y="370" class="h3">핵심 UX 규칙</text>
+<text x="470" y="420" class="body">01  상단에는 그룹 선택과 프로필 등 핵심 액션만 배치</text>
+<text x="470" y="478" class="body">02  캘린더는 기록이 있는 날짜를 색으로 구분</text>
+<text x="470" y="536" class="body">03  날짜 선택 후 해당 날짜의 피드로 자연스럽게 연결</text>
+<text x="470" y="594" class="body">04  기록 카드에는 사진·제목·날짜·반응을 우선 노출</text>
+<text x="72" y="1090" class="tiny">02  DETAIL / COMMENTS</text>
+<text x="72" y="1130" class="h2">기록 상세와 댓글</text>
+<rect x="72" y="1160" width="600" height="260" rx="20" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="92" y="1180" width="180" height="130" rx="14" fill="#F3EDF9"/>
+<text x="300" y="1210" class="h3">우리의 봄 소풍</text>
+<text x="300" y="1240" class="cap">2026. 04. 18 · 장소</text>
+<text x="300" y="1280" class="small">그날의 이야기를 함께 기억해요.</text>
+<rect x="92" y="1330" width="520" height="36" rx="18" fill="#FCEDED"/>
+<text x="112" y="1354" class="cap" style="fill:#9A4A4A">좋아요  ·  최고  ·  웃겨요</text>
+<rect x="92" y="1380" width="520" height="28" rx="12" fill="#F3EDF9"/>
+<text x="108" y="1400" class="cap">친구 댓글과 답글이 이어지는 영역</text>
+<text x="730" y="1190" class="body">기록 상세는 사진 → 제목/날짜 → 이야기 → 반응 → 댓글 순서</text>
+<text x="730" y="1245" class="body">댓글 입력창은 하단 고정 또는 상세 영역 마지막에 배치</text>
+<text x="730" y="1300" class="body">공감 버튼은 선택 상태를 색과 배경으로 함께 표현</text>
+<text x="72" y="1500" class="tiny">03  PLANS / RECAP / GROUP</text>
+<text x="72" y="1540" class="h2">약속 · 결산 · 모임</text>
+<rect x="72" y="1580" width="380" height="140" rx="18" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="90" y="1598" width="58" height="58" rx="14" fill="#EAF4F9"/>
+<text x="166" y="1625" class="h3">약속</text>
+<text x="166" y="1655" class="small">날짜·장소·참석 상태를 카드 하나로</text>
+<rect x="492" y="1580" width="380" height="140" rx="18" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="510" y="1598" width="58" height="58" rx="14" fill="#FCEDED"/>
+<text x="586" y="1625" class="h3">월간 결산</text>
+<text x="586" y="1655" class="small">핑크 톤 요약 카드와 핵심 숫자</text>
+<rect x="912" y="1580" width="380" height="140" rx="18" fill="#FFFFFF" stroke="#ECE6EF" stroke-width="1.5"/>
+<rect x="930" y="1598" width="58" height="58" rx="14" fill="#F3EDF9"/>
+<text x="1006" y="1625" class="h3">모임</text>
+<text x="1006" y="1655" class="small">멤버·초대·그룹 관리 메뉴</text>
+</svg>
