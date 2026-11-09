@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MONIT 앱</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0;font-family:'Noto Sans KR',system-ui,sans-serif}
+button{font-family:inherit;cursor:pointer;border:0;background:none;padding:0;color:inherit}
+input{font-family:inherit}
+.pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center}
+.pin .th{position:relative;border:3px solid #fff;box-shadow:0 4px 12px rgba(31,26,81,.4);box-sizing:border-box}
+.pin .tip{width:0;height:0;border:7px solid transparent;border-top:8px solid #fff;border-bottom:0;margin-top:-1px}
+</style>
+</helmet>
+
+<div style="position:relative;width:390px;height:844px;overflow:hidden;background:#fff;color:#171719;font-size:15px;line-height:1.45">
+
+<!-- ═════ 홈 ═════ -->
+<sc-if value="{{showHome}}" hint-placeholder-val="{{true}}">
+<div style="position:absolute;left:0;top:0;width:390px;height:780px;overflow:auto;padding:0 16px 24px;box-sizing:border-box">
+  <div style="padding:20px 0 4px;font-weight:800;letter-spacing:.04em;color:#6155F5;font-size:18px">MONIT</div>
+  <div style="position:relative;overflow:hidden;background:#6155F5;color:#fff;border-radius:20px;padding:20px;margin-top:12px">
+    <div style="position:absolute;right:-18px;top:-18px;width:88px;height:88px;border-radius:44px;background:#B9F36B"></div>
+    <div style="position:absolute;right:50px;top:30px;width:34px;height:34px;border-radius:17px;background:#F56F98"></div>
+    <div style="font-size:14px;opacity:.9">약속이 끝나면, 우리의 추억이 시작돼요</div>
+    <div style="font-size:24px;line-height:1.3;font-weight:700;letter-spacing:-.02em;margin:4px 0 14px">{{statRegions}}개 지역 · {{statPlaces}}곳<br>사진 {{statPhotos}}장이 쌓였어요</div>
+    <button type="button" onClick="{{openNew}}" style="width:100%;height:44px;border-radius:12px;background:#fff;color:#3C319F;font-weight:700;font-size:16px">+ 새 약속 만들기</button>
+  </div>
+
+  <sc-if value="{{hasUpcoming}}" hint-placeholder-val="{{true}}">
+  <div style="font-size:18px;font-weight:700;margin:28px 0 12px">다가오는 약속</div>
+  <sc-for list="{{upcoming}}" as="c" hint-placeholder-count="1">
+    <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
+      <div style="width:64px;height:64px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
+      <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div>
+      <span style="display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}}">{{c.stLabel}}</span></div>
+    </button>
+  </sc-for>
+  </sc-if>
+
+  <sc-if value="{{hasWaiting}}" hint-placeholder-val="{{true}}">
+  <div style="font-size:18px;font-weight:700;margin:28px 0 12px">사진을 기다리는 약속</div>
+  <sc-for list="{{waiting}}" as="c" hint-placeholder-count="1">
+    <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
+      <div style="width:64px;height:64px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
+      <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div>
+      <span style="display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}}">{{c.stLabel}}</span></div>
+    </button>
+  </sc-for>
+  </sc-if>
+
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin:28px 0 12px"><span style="font-size:18px;font-weight:700">최근 추억</span><button type="button" onClick="{{goArchive}}" style="font-size:12px;color:#55565a">전체 보기</button></div>
+  <div style="display:flex;gap:10px;overflow:auto;margin:0 -16px;padding:0 16px 4px">
+    <sc-for list="{{recent}}" as="c" hint-placeholder-count="3">
+      <button type="button" onClick="{{c.onOpen}}" style="flex:none;width:150px;text-align:left">
+        <div style="width:150px;height:150px;border-radius:16px;background:{{c.bg}};margin-bottom:6px"></div>
+        <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{c.title}}</div>
+        <div style="font-size:12px;color:#55565a">{{c.date}}</div>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═════ 추억 지도 ═════ -->
+<sc-if value="{{showMap}}" hint-placeholder-val="{{false}}">
+<div style="position:absolute;left:0;top:0;width:390px;height:780px;overflow:hidden;background:#EDEAFF">
+  <svg width="390" height="780" viewBox="0 0 390 780" aria-hidden="true" style="position:absolute;left:0;top:0">
+    <g style="transform:{{mapT}};transform-origin:0 0;transition:transform .45s ease">
+      <path d="{{landD}}" fill="#FFFFFF" stroke="#B6ADFF" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+      <ellipse cx="{{jejuX}}" cy="{{jejuY}}" rx="30" ry="14" fill="#FFFFFF" stroke="#B6ADFF" stroke-width="1.5" vector-effect="non-scaling-stroke"></ellipse>
+      <path d="{{dmzD}}" fill="none" stroke="#D8D3FF" stroke-width="1" stroke-dasharray="4 4" vector-effect="non-scaling-stroke"></path>
+    </g>
+  </svg>
+
+  <sc-for list="{{pins}}" as="p" hint-placeholder-count="5">
+    <button type="button" class="pin" aria-label="{{p.aria}}" onClick="{{p.onTap}}" style="left:{{p.left}}px;top:{{p.top}}px;transition:left .45s ease,top .45s ease">
+      <div class="th" style="width:{{p.sz}}px;height:{{p.sz}}px;border-radius:16px;background:{{p.bg}}">
+        <sc-if value="{{p.hasBadge}}" hint-placeholder-val="{{true}}">
+          <span style="position:absolute;top:-10px;right:-10px;min-width:22px;height:22px;padding:0 5px;box-sizing:border-box;border-radius:11px;background:{{p.badgeBg}};color:{{p.badgeFg}};font-size:12px;font-weight:700;line-height:18px;text-align:center;border:2px solid #fff">{{p.badge}}</span>
+        </sc-if>
+      </div>
+      <div class="tip"></div>
+      <sc-if value="{{p.hasLabel}}" hint-placeholder-val="{{true}}">
+        <span style="margin-top:3px;white-space:nowrap;font-size:12px;font-weight:700;padding:1px 8px;border-radius:8px;background:#fff;color:#1F1A51;box-shadow:0 1px 4px rgba(0,0,0,.2)">{{p.label}}</span>
+      </sc-if>
+    </button>
+  </sc-for>
+
+  <div style="position:absolute;left:0;top:0;width:390px;padding:12px 16px;box-sizing:border-box;display:flex;gap:8px;overflow:auto;background:linear-gradient(#EDEAFF,rgba(237,234,255,0))">
+    <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+      <button type="button" onClick="{{f.onTap}}" style="flex:none;height:34px;padding:0 14px;border-radius:17px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(23,23,25,.12);background:{{f.bg}};color:{{f.fg}}">{{f.label}}</button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{inRegion}}" hint-placeholder-val="{{false}}">
+  <button type="button" onClick="{{backNation}}" style="position:absolute;left:16px;top:58px;height:36px;padding:0 14px;border-radius:18px;background:#fff;box-shadow:0 2px 8px rgba(23,23,25,.12);font-size:13px;font-weight:700;color:#4D40C7">‹ 전국 · {{regionName}}</button>
+  </sc-if>
+
+  <sc-if value="{{mapEmpty}}" hint-placeholder-val="{{false}}">
+  <div style="position:absolute;left:16px;right:16px;bottom:24px;background:#fff;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(23,23,25,.12)"><div style="font-weight:700">장소를 연결한 추억이 아직 없어요</div><div style="font-size:14px;color:#55565a">사진을 올릴 때 장소를 고르면 지도에 섬네일이 남아요.</div></div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ═════ 보관함 ═════ -->
+<sc-if value="{{showArchive}}" hint-placeholder-val="{{false}}">
+<div style="position:absolute;left:0;top:0;width:390px;height:780px;overflow:auto;padding:0 16px 24px;box-sizing:border-box">
+  <div style="padding:20px 0 4px;font-size:26px;font-weight:700;letter-spacing:-.02em">추억 보관함</div>
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+    <div style="font-size:18px;font-weight:700;margin:24px 0 12px">{{g.label}}</div>
+    <sc-for list="{{g.cards}}" as="c" hint-placeholder-count="2">
+      <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
+        <div style="width:64px;height:64px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
+        <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div>
+        <span style="display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}}">{{c.stLabel}}</span></div>
+      </button>
+    </sc-for>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ═════ 하단 탭 ═════ -->
+<div style="position:absolute;left:0;bottom:0;width:390px;height:64px;display:flex;border-top:1px solid #e1e2e4;background:#fff;z-index:20">
+  <button type="button" onClick="{{goHome}}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:{{cHome}}">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/></svg>홈</button>
+  <button type="button" onClick="{{goMap}}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:{{cMap}}">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>추억 지도</button>
+  <button type="button" onClick="{{goArchive}}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:{{cArchive}}">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 15l4-4 4 4 3-3 5 5"/></svg>보관함</button>
+</div>
+
+<!-- ═════ 이벤트 상세 ═════ -->
+<sc-if value="{{showDetail}}" hint-placeholder-val="{{false}}">
+<div style="position:absolute;left:0;top:0;width:390px;height:844px;background:#fff;z-index:40;overflow:auto;padding-bottom:96px;box-sizing:border-box">
+  <div style="position:relative;height:200px;background:{{d.bg}}">
+    <button type="button" aria-label="뒤로" onClick="{{closeDetail}}" style="position:absolute;left:12px;top:12px;width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:#171719"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+  </div>
+  <div style="padding:0 16px">
+    <div style="font-size:26px;line-height:1.3;font-weight:700;letter-spacing:-.02em;margin-top:16px">{{d.title}}</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><span style="padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{d.stBg}};color:{{d.stFg}}">{{d.stLabel}}</span><span style="font-size:14px;color:#55565a">{{d.date}}</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
+      <div style="display:flex;align-items:center">
+        <sc-for list="{{d.members}}" as="m" hint-placeholder-count="4"><span style="width:30px;height:30px;border-radius:15px;margin-right:-8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:{{m.bg}};color:{{m.fg}}">{{m.ch}}</span></sc-for>
+        <span style="margin-left:16px;font-size:12px;color:#55565a">{{d.count}}명</span>
+      </div>
+      <button type="button" onClick="{{copyInvite}}" style="height:36px;padding:0 14px;border:1px solid #e1e2e4;border-radius:10px;font-size:14px;font-weight:600">초대 링크 복사</button>
+    </div>
+    <div style="font-size:12px;color:#55565a;margin-top:8px">멤버 전용 · 링크만으로는 사진이 보이지 않고, 호스트 승인 후 참여해요</div>
+
+    <sc-if value="{{d.hasPlaces}}" hint-placeholder-val="{{true}}">
+    <div style="font-size:18px;font-weight:700;margin:24px 0 10px">다녀온 장소</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{d.places}}" as="pl" hint-placeholder-count="2"><button type="button" onClick="{{pl.onTap}}" style="height:32px;padding:0 12px;border-radius:16px;background:#EDEAFF;color:#3C319F;font-size:13px;font-weight:600">{{pl.name}}</button></sc-for>
+    </div>
+    </sc-if>
+
+    <div style="font-size:18px;font-weight:700;margin:24px 0 4px">기록</div>
+    <sc-if value="{{d.noEntries}}" hint-placeholder-val="{{false}}"><div style="margin-top:12px;padding:28px 16px;text-align:center;border:1px dashed #e1e2e4;border-radius:16px;color:#55565a">아직 기록이 없어요.<br>사진 한 장이면 충분해요.</div></sc-if>
+    <sc-for list="{{d.entries}}" as="en" hint-placeholder-count="2">
+      <div style="margin-top:20px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px"><span style="width:30px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:{{en.avBg}};color:{{en.avFg}}">{{en.ch}}</span><b>{{en.by}}</b><span style="font-size:12px;color:#55565a">· {{en.place}}</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px">
+          <sc-for list="{{en.pics}}" as="ph" hint-placeholder-count="3"><div style="aspect-ratio:1/1;border-radius:8px;background:{{ph.bg}}"></div></sc-for>
+        </div>
+        <sc-if value="{{en.hasNote}}" hint-placeholder-val="{{true}}"><div style="margin-top:8px">{{en.note}}</div></sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position:absolute;left:0;bottom:0;width:390px;padding:12px 16px 20px;box-sizing:border-box;background:#fff;border-top:1px solid #e1e2e4">
+    <button type="button" onClick="{{openAdd}}" style="width:100%;height:48px;border-radius:12px;background:#6155F5;color:#fff;font-size:16px;font-weight:700">사진 추가</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ═════ 시트(장소 / 새 약속 / 사진 추가) ═════ -->
+<sc-if value="{{hasSheet}}" hint-placeholder-val="{{false}}">
+<div style="position:absolute;left:0;top:0;width:390px;height:844px;background:rgba(23,23,25,.52);z-index:60;display:flex;align-items:flex-end">
+  <button type="button" aria-label="닫기" onClick="{{closeSheet}}" style="position:absolute;left:0;top:0;width:390px;height:844px"></button>
+  <div style="position:relative;width:390px;max-height:740px;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:8px 16px 28px;box-sizing:border-box">
+    <div style="width:36px;height:4px;border-radius:2px;background:#e1e2e4;margin:0 auto 14px"></div>
+
+    <sc-if value="{{showPlaceSheet}}" hint-placeholder-val="{{false}}">
+      <div style="font-size:20px;font-weight:700">{{ps.name}}</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:#F7F7F8;color:#55565a">{{ps.region}}</span><span style="font-size:14px;color:#55565a">{{ps.visits}}번 방문 · 사진 {{ps.photos}}장</span></div>
+      <div style="font-size:12px;color:#55565a;margin-top:8px">함께한 친구 {{ps.mates}}</div>
+      <div style="display:flex;gap:6px;overflow:auto;margin:10px 0">
+        <sc-for list="{{ps.strip}}" as="ph" hint-placeholder-count="4"><div style="flex:none;width:84px;height:84px;border-radius:12px;background:{{ph.bg}}"></div></sc-for>
+      </div>
+      <sc-for list="{{ps.events}}" as="c" hint-placeholder-count="2">
+        <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
+          <div style="width:56px;height:56px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
+          <div><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div></div>
+        </button>
+      </sc-for>
+    </sc-if>
+
+    <sc-if value="{{showNewSheet}}" hint-placeholder-val="{{false}}">
+      <div style="font-size:20px;font-weight:700;margin-bottom:4px">새 약속</div>
+      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">제목 (필수)</div>
+      <input type="text" maxlength="40" value="{{newTitle}}" onInput="{{onTitle}}" placeholder="예: 성수동 생일 모임" aria-label="약속 제목" style="width:100%;height:48px;box-sizing:border-box;border:1px solid #e1e2e4;border-radius:12px;padding:0 14px;font-size:15px;color:#171719;background:#fff">
+      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">날짜 (필수)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{dateChips}}" as="c" hint-placeholder-count="3"><button type="button" onClick="{{c.onTap}}" style="height:36px;padding:0 14px;border-radius:18px;font-size:13px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
+      </div>
+      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">예정 장소 (선택)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{newPlaceChips}}" as="c" hint-placeholder-count="6"><button type="button" onClick="{{c.onTap}}" style="height:34px;padding:0 12px;border-radius:17px;font-size:13px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
+      </div>
+      <div style="font-size:12px;color:#55565a;margin:14px 0">비공개로 시작해요. 초대한 친구는 승인 후 참여할 수 있어요.</div>
+      <button type="button" onClick="{{submitNew}}" style="width:100%;height:48px;border-radius:12px;background:#6155F5;color:#fff;font-size:16px;font-weight:700">만들기</button>
+    </sc-if>
+
+    <sc-if value="{{showAddSheet}}" hint-placeholder-val="{{false}}">
+      <div style="font-size:20px;font-weight:700;margin-bottom:4px">사진 추가</div>
+      <div style="font-size:13px;color:#55565a;margin-bottom:10px">갤러리에서 사진을 골라요 (데모용 샘플 · 여러 장 선택)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
+        <sc-for list="{{samples}}" as="s" hint-placeholder-count="8"><button type="button" aria-label="{{s.aria}}" onClick="{{s.onTap}}" style="position:relative;aspect-ratio:1/1;border-radius:10px;background:{{s.bg}};outline:{{s.outline}};outline-offset:-3px"><sc-if value="{{s.on}}" hint-placeholder-val="{{false}}"><span style="position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:10px;background:#6155F5;color:#fff;font-size:12px;font-weight:700;line-height:20px">{{s.n}}</span></sc-if></button></sc-for>
+      </div>
+      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">장소 연결 (선택) — 연결하면 지도에 섬네일 핀이 생겨요</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{addPlaceChips}}" as="c" hint-placeholder-count="6"><button type="button" onClick="{{c.onTap}}" style="height:34px;padding:0 12px;border-radius:17px;font-size:13px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
+      </div>
+      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">한 줄 메모 (선택)</div>
+      <input type="text" maxlength="80" value="{{addNote}}" onInput="{{onNote}}" placeholder="이날의 기억을 남겨요" aria-label="한 줄 메모" style="width:100%;height:48px;box-sizing:border-box;border:1px solid #e1e2e4;border-radius:12px;padding:0 14px;font-size:15px;color:#171719;background:#fff">
+      <button type="button" onClick="{{submitAdd}}" style="width:100%;height:48px;border-radius:12px;background:#6155F5;color:#fff;font-size:16px;font-weight:700;margin-top:18px">{{addLabel}}</button>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}">
+<div style="position:absolute;left:16px;right:16px;bottom:84px;z-index:80;background:#1F1A51;color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;text-align:center">{{toast}}</div>
+</sc-if>
+
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+const T = '2026-11-09';
+const PAL = [['#9bdcf5','#2f7fc1',72],['#ffd1b3','#d9608a',28],['#c9f27e','#3f8f4a',70],['#b6adff','#3c319f',25],['#ffc9d9','#8f82ff',65],['#fbe38e','#f08a5d',30],['#a6e3d8','#2d6f8f',75],['#d8d3ff','#6155f5',35],['#f7b2a3','#4d40c7',68],['#bdeba0','#2f7a6b',30],['#ffe0a3','#c75d7e',72],['#9aa6ff','#1f1a51',28]];
+const pic = (i) => { const p = PAL[i % 12]; return 'radial-gradient(circle at ' + p[2] + '% 26%,rgba(255,255,255,.75) 0 7%,transparent 8%),linear-gradient(165deg,' + p[0] + ',' + p[1] + ')'; };
+const FALL = 'linear-gradient(135deg,#B6ADFF,#FF8DAD)';
+const PL = {
+  seongsu:{n:'성수동 카페거리',r:'cap',lng:127.0557,lat:37.5446}, hongdae:{n:'홍대 거리',r:'cap',lng:126.9236,lat:37.5563},
+  anmok:{n:'강릉 안목해변',r:'gw',lng:128.9487,lat:37.7716}, sokcho:{n:'속초 해수욕장',r:'gw',lng:128.6012,lat:38.1912},
+  daejeon:{n:'대전 성심당',r:'cc',lng:127.4274,lat:36.3274}, jeonju:{n:'전주 한옥마을',r:'jb',lng:127.1530,lat:35.8153},
+  yeosu:{n:'여수 낭만포차',r:'jn',lng:127.7428,lat:34.7378}, suncheon:{n:'순천만 국가정원',r:'jn',lng:127.5090,lat:34.9318},
+  hwangridan:{n:'경주 황리단길',r:'gb',lng:129.2100,lat:35.8386}, andong:{n:'안동 하회마을',r:'gb',lng:128.5186,lat:36.5390},
+  haeundae:{n:'부산 해운대',r:'bg',lng:129.1604,lat:35.1587}, gamcheon:{n:'감천문화마을',r:'bg',lng:129.0106,lat:35.0975}, gwangalli:{n:'광안리 해변',r:'bg',lng:129.1186,lat:35.1532},
+  seongsan:{n:'제주 성산일출봉',r:'jj',lng:126.9425,lat:33.4580}, aewol:{n:'제주 애월',r:'jj',lng:126.3100,lat:33.4620}, hyeopjae:{n:'제주 협재해변',r:'jj',lng:126.2390,lat:33.3940}
+};
+const RG = {
+  cap:{n:'수도권',c:[126.99,37.55],k:8}, gw:{n:'강원',c:[128.78,37.98],k:4.5}, cc:{n:'충청',c:[127.4,36.35],k:5}, jb:{n:'전북',c:[127.15,35.8],k:6},
+  jn:{n:'전남',c:[127.6,34.85],k:8}, gb:{n:'경북',c:[128.87,36.19],k:4}, bg:{n:'부산·경남',c:[129.08,35.13],k:16}, jj:{n:'제주',c:[126.6,33.38],k:6}
+};
+const PICK = ['seongsu','hongdae','anmok','sokcho','daejeon','jeonju','suncheon','yeosu','hwangridan','andong','haeundae','gamcheon','seongsan','aewol'];
+const px = (p) => [(p.lng - 125.8) * 80 + 30, (38.7 - p.lat) * 100 + 80];
+const LAND = [[128.37,38.62],[128.60,38.20],[128.95,37.77],[129.10,37.45],[129.35,36.95],[129.45,36.50],[129.42,36.05],[129.58,36.07],[129.40,35.80],[129.45,35.50],[129.36,35.36],[129.22,35.18],[129.05,35.05],[128.80,35.05],[128.65,34.90],[128.40,34.85],[128.10,34.95],[127.95,34.75],[127.65,34.72],[127.75,34.60],[127.40,34.45],[127.30,34.60],[126.95,34.40],[126.55,34.30],[126.30,34.55],[126.30,34.80],[126.45,35.05],[126.50,35.30],[126.55,35.60],[126.70,35.85],[126.60,36.05],[126.50,36.40],[126.35,36.70],[126.15,36.90],[126.45,37.00],[126.85,36.95],[126.70,37.10],[126.60,37.45],[126.60,37.60],[126.40,37.65],[126.60,37.80],[126.67,37.78],[127.2,38.25],[128.0,38.3]];
+const toPath = (pts, close) => pts.map((p, i) => { const q = px({lng:p[0], lat:p[1]}); return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join(' ') + (close ? ' Z' : '');
+const E = (id, title, date, members, entries, planned) => ({ id, title, date, members, entries, planned: planned || null });
+const En = (pl, by, note, pics) => ({ pl, by, note, pics });
+const ALL = ['나','지현','민수','서연'];
+const SEED = [
+  E('e1','제주 3박4일 우정여행','2026-10-10',ALL,[En('seongsan','지현','일출 보려고 새벽 4시 기상',[0,1,2]),En('aewol','나','애월 카페 뷰 미쳤다',[3,4,5]),En('hyeopjae','민수','물 색깔 실화?',[6,7])]),
+  E('e2','부산 맛집 투어','2026-09-20',['나','지현','서연'],[En('haeundae','나','',[8,9]),En('gamcheon','서연','골목 사진 맛집',[10,11,0]),En('gwangalli','지현','광안대교 야경',[1])]),
+  E('e3','강릉 당일치기','2026-08-15',['나','민수'],[En('anmok','민수','커피 한 잔',[2,3])]),
+  E('e4','지현 생일 파티','2026-07-04',ALL,[En('seongsu','서연','생일 축하해',[4,5,6])]),
+  E('e5','전주 한옥마을','2026-05-03',['나','지현','민수'],[En('jeonju','지현','한복 입고 비빔밥',[7,8])]),
+  E('e6','경주 벚꽃 나들이','2026-04-05',['나','서연'],[En('hwangridan','나','',[9,10])]),
+  E('e7','여수 밤바다','2026-03-21',['나','민수','서연'],[En('yeosu','민수','',[11,0])]),
+  E('e8','성수 팝업 구경','2026-11-01',['나','지현'],[En('seongsu','지현','',[1,2])]),
+  E('e9','홍대 저녁','2026-10-31',['나','민수','서연'],[En('hongdae','나','',[3,4])]),
+  E('e10','보드게임 카페','2026-11-07',['나','지현'],[]),
+  E('e11','속초 겨울바다','2026-11-21',['나','지현','민수'],[],'sokcho')
+];
+const ST = {
+  UPCOMING:{l:'다가오는 약속',bg:'#EDEAFF',fg:'#3C319F'}, ONGOING:{l:'진행 중',bg:'#B9F36B',fg:'#1F1A51'},
+  MEMORY:{l:'추억',bg:'#F0F0F2',fg:'#55565a'}, PAST_EMPTY:{l:'사진 추가 대기',bg:'#F56F98',fg:'#1F1A51'}
+};
+const AVC = [['#6155F5','#fff'],['#B9F36B','#1F1A51'],['#F56F98','#1F1A51'],['#3C319F','#fff']];
+const fd = (s) => { const a = s.split('-'); return a[0] + '.' + (+a[1]) + '.' + (+a[2]); };
+const statusOf = (e) => e.date > T ? 'UPCOMING' : e.date === T ? 'ONGOING' : e.entries.length ? 'MEMORY' : 'PAST_EMPTY';
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab:'home', detail:null, sheet:null, sheetPlace:null, region:null, filter:null, events:SEED, newTitle:'', newDate:T, newPlace:null, addSel:[], addPlace:null, addNote:'', toast:'', nid:100 };
+  }
+  say(m) { this.setState({ toast: m }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  renderVals() {
+    const s = this.state, ev = s.events, set = (o) => this.setState(o);
+    const agg = (flt) => {
+      const m = {};
+      ev.forEach((e) => e.entries.forEach((en) => {
+        if (!en.pl || (flt && en.by !== flt)) return;
+        const a = m[en.pl] || (m[en.pl] = { id: en.pl, n: 0, evs: {}, thumb: 0, td: '' });
+        a.n += en.pics.length; a.evs[e.id] = (a.evs[e.id] || []).concat(en.pics);
+        if (e.date >= a.td) { a.td = e.date; a.thumb = en.pics[0]; }
+      }));
+      return m;
+    };
+    const A0 = Object.values(agg(null)), A = Object.values(agg(s.filter));
+    const cover = (e) => e.entries.length ? pic(e.entries[0].pics[0]) : FALL;
+    const card = (e) => { const k = statusOf(e), pl = {}; e.entries.forEach((x) => { if (x.pl) pl[x.pl] = 1; }); const np = Object.keys(pl).length; return { id:e.id, title:e.title, date:fd(e.date), bg:cover(e), sub: fd(e.date) + ' · ' + e.members.length + '명' + (np ? ' · ' + np + '곳' : ''), stLabel:ST[k].l, stBg:ST[k].bg, stFg:ST[k].fg, onOpen:() => set({ detail:e.id, sheet:null }) }; };
+    const sorted = ev.slice().sort((a, b) => b.date.localeCompare(a.date));
+    const regs = {}; A0.forEach((a) => { regs[PL[a.id].r] = 1; });
+
+    // 지도
+    let pins = [], mapT = 'translate(0px,0px) scale(1)';
+    const openPlace = (id) => () => set({ sheet:'place', sheetPlace:id });
+    const mk = (x, y, a, label, big, aria, onTap) => ({ left:x, top:y, sz:big ? 68 : 56, bg:pic(a.thumb), hasBadge:big || Object.keys(a.evs).length > 1, badge:big ? String(big) : String(Object.keys(a.evs).length), badgeBg:big ? '#B9F36B' : '#6155F5', badgeFg:big ? '#1F1A51' : '#fff', hasLabel:!!label, label, aria, onTap });
+    if (!s.region) {
+      const gr = {}; A.forEach((a) => { (gr[PL[a.id].r] = gr[PL[a.id].r] || []).push(a); });
+      Object.keys(gr).forEach((r) => {
+        const g = gr[r];
+        if (g.length === 1) { const q = px(PL[g[0].id]); pins.push(mk(q[0], q[1], g[0], PL[g[0].id].n, 0, PL[g[0].id].n, openPlace(g[0].id))); }
+        else {
+          const top = g.slice().sort((a, b) => b.n - a.n)[0];
+          let x = 0, y = 0; g.forEach((a) => { const q = px(PL[a.id]); x += q[0]; y += q[1]; });
+          pins.push(mk(x / g.length, y / g.length, top, RG[r].n, g.length, RG[r].n + ' ' + g.length + '곳, 확대', () => set({ region:r })));
+        }
+      });
+    } else {
+      const R = RG[s.region], c = px({ lng:R.c[0], lat:R.c[1] });
+      mapT = 'translate(195px,390px) scale(' + R.k + ') translate(' + (-c[0]) + 'px,' + (-c[1]) + 'px)';
+      A.filter((a) => PL[a.id].r === s.region).forEach((a) => { const q = px(PL[a.id]); pins.push(mk(195 + (q[0] - c[0]) * R.k, 390 + (q[1] - c[1]) * R.k, a, PL[a.id].n, 0, PL[a.id].n, openPlace(a.id))); });
+    }
+    const names = ['전체', '나', '지현', '민수', '서연'];
+    const filters = names.map((n) => { const on = (n === '전체' && !s.filter) || s.filter === n; return { label:n === '전체' ? '전체' : n === '나' ? '내가 찍은 사진' : n + '의 사진', bg:on ? '#6155F5' : '#fff', fg:on ? '#fff' : '#171719', onTap:() => set({ filter:n === '전체' ? null : n, region:null }) }; });
+    const jj = px({ lng:126.55, lat:33.38 });
+
+    // 장소 시트
+    let ps = { name:'', region:'', visits:0, photos:0, mates:'', strip:[], events:[] };
+    if (s.sheet === 'place') {
+      const a = A0.find((x) => x.id === s.sheetPlace);
+      if (a) {
+        const evs = Object.keys(a.evs).map((id) => ev.find((e) => e.id === id)).sort((x, y) => y.date.localeCompare(x.date));
+        const mates = []; evs.forEach((e) => e.members.forEach((m) => { if (m !== '나' && mates.indexOf(m) < 0) mates.push(m); }));
+        let all = []; evs.forEach((e) => { all = all.concat(a.evs[e.id]); });
+        ps = { name:PL[a.id].n, region:RG[PL[a.id].r].n, visits:evs.length, photos:a.n, mates:mates.join(', ') || '없음', strip:all.slice(0, 10).map((i) => ({ bg:pic(i) })),
+          events:evs.map((e) => ({ title:e.title, sub:fd(e.date) + ' · 사진 ' + a.evs[e.id].length + '장', bg:pic(a.evs[e.id][0]), onOpen:() => set({ detail:e.id, sheet:null }) })) };
+      }
+    }
+
+    // 상세
+    const de = s.detail ? ev.find((e) => e.id === s.detail) : null;
+    let d = { title:'', date:'', bg:FALL, stLabel:'', stBg:'', stFg:'', members:[], count:0, hasPlaces:false, places:[], entries:[], noEntries:false };
+    if (de) {
+      const k = statusOf(de), pl = []; de.entries.forEach((x) => { if (x.pl && pl.indexOf(x.pl) < 0) pl.push(x.pl); });
+      d = { title:de.title, date:fd(de.date), bg:cover(de), stLabel:ST[k].l, stBg:ST[k].bg, stFg:ST[k].fg,
+        members:de.members.map((m, i) => ({ ch:m[0], bg:AVC[i % 4][0], fg:AVC[i % 4][1] })), count:de.members.length,
+        hasPlaces:pl.length > 0, places:pl.map((id) => ({ name:PL[id].n, onTap:() => set({ detail:null, tab:'map', region:PL[id].r, sheet:'place', sheetPlace:id }) })),
+        noEntries:de.entries.length === 0,
+        entries:de.entries.map((x) => { const i = Math.max(0, de.members.indexOf(x.by)); return { ch:x.by[0], by:x.by, avBg:AVC[i % 4][0], avFg:AVC[i % 4][1], place:x.pl ? PL[x.pl].n : '장소 없음', note:x.note, hasNote:!!x.note, pics:x.pics.map((p) => ({ bg:pic(p) })) }; }) };
+    }
+
+    // 새 약속 / 사진 추가
+    const chip = (on, label, onTap) => ({ label, bg:on ? '#6155F5' : '#F0F0F2', fg:on ? '#fff' : '#171719', onTap });
+    const dateChips = [['오늘', T], ['다음 토요일', '2026-11-14'], ['지난 토요일', '2026-11-07']].map((x) => chip(s.newDate === x[1], x[0], () => set({ newDate:x[1] })));
+    const newPlaceChips = PICK.map((id) => chip(s.newPlace === id, PL[id].n, () => set({ newPlace:s.newPlace === id ? null : id })));
+    const addPlaceChips = PICK.map((id) => chip(s.addPlace === id, PL[id].n, () => set({ addPlace:s.addPlace === id ? null : id })));
+    const samples = [0, 3, 6, 8, 9, 10, 11, 4].map((i) => { const at = s.addSel.indexOf(i); return { bg:pic(i), on:at >= 0, n:at + 1, aria:'샘플 사진 ' + (i + 1), outline:at >= 0 ? '3px solid #6155F5' : 'none', onTap:() => set({ addSel:at >= 0 ? s.addSel.filter((x) => x !== i) : s.addSel.concat(i) }) }; });
+    const months = []; const mm = {};
+    sorted.forEach((e) => { const k = e.date.slice(0, 4) + '년 ' + (+e.date.slice(5, 7)) + '월'; if (!mm[k]) { mm[k] = { label:k, cards:[] }; months.push(mm[k]); } mm[k].cards.push(card(e)); });
+
+    return {
+      showHome:s.tab === 'home' && !de, showMap:s.tab === 'map', showArchive:s.tab === 'archive', showDetail:!!de, d,
+      cHome:s.tab === 'home' ? '#6155F5' : '#9a9ba1', cMap:s.tab === 'map' ? '#6155F5' : '#9a9ba1', cArchive:s.tab === 'archive' ? '#6155F5' : '#9a9ba1',
+      goHome:() => set({ tab:'home', detail:null, sheet:null }), goMap:() => set({ tab:'map', detail:null, sheet:null, region:null }), goArchive:() => set({ tab:'archive', detail:null, sheet:null }),
+      statRegions:Object.keys(regs).length, statPlaces:A0.length, statPhotos:A0.reduce((t, a) => t + a.n, 0),
+      upcoming:ev.filter((e) => ['UPCOMING', 'ONGOING'].indexOf(statusOf(e)) >= 0).sort((a, b) => a.date.localeCompare(b.date)).map(card), hasUpcoming:ev.some((e) => ['UPCOMING', 'ONGOING'].indexOf(statusOf(e)) >= 0),
+      waiting:ev.filter((e) => statusOf(e) === 'PAST_EMPTY').map(card), hasWaiting:ev.some((e) => statusOf(e) === 'PAST_EMPTY'),
+      recent:sorted.filter((e) => statusOf(e) === 'MEMORY').slice(0, 6).map(card), groups:months,
+      pins, mapT, filters, inRegion:!!s.region, regionName:s.region ? RG[s.region].n : '', backNation:() => set({ region:null }), mapEmpty:pins.length === 0,
+      landD:toPath(LAND, true), dmzD:toPath([[126.67,37.78],[127.2,38.25],[128.0,38.3],[128.37,38.62]], false), jejuX:jj[0], jejuY:jj[1],
+      closeDetail:() => set({ detail:null }),
+      copyInvite:() => this.say('초대 링크를 복사했어요 · 호스트 승인 후 참여할 수 있어요'),
+      hasSheet:!!s.sheet, closeSheet:() => set({ sheet:null }), showPlaceSheet:s.sheet === 'place', ps,
+      showNewSheet:s.sheet === 'new', showAddSheet:s.sheet === 'add',
+      openNew:() => set({ sheet:'new', newTitle:'', newDate:T, newPlace:null }), newTitle:s.newTitle, onTitle:(e) => set({ newTitle:e.target.value }), dateChips, newPlaceChips,
+      submitNew:() => {
+        const t = s.newTitle.trim(); if (!t) { this.say('제목을 입력해주세요'); return; }
+        const id = 'n' + s.nid; set({ events:ev.concat([E(id, t, s.newDate, ['나'], [], s.newPlace)]), nid:s.nid + 1, sheet:null, detail:id });
+      },
+      openAdd:() => set({ sheet:'add', addSel:[], addPlace:null, addNote:'' }), samples, addPlaceChips, addNote:s.addNote, onNote:(e) => set({ addNote:e.target.value }),
+      addLabel:s.addSel.length ? s.addSel.length + '장 올리기' : '올리기',
+      submitAdd:() => {
+        if (!s.addSel.length) { this.say('사진을 한 장 이상 선택해주세요'); return; }
+        const evs = ev.map((e) => e.id === s.detail ? Object.assign({}, e, { entries:e.entries.concat([En(s.addPlace, '나', s.addNote.trim(), s.addSel)]) }) : e);
+        set({ events:evs, sheet:null });
+        this.say(s.addPlace ? '지도에 추억 핀이 생겼어요' : '타임라인에 추가했어요. 장소를 연결하면 지도에도 보여요');
+      },
+      hasToast:!!s.toast, toast:s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
