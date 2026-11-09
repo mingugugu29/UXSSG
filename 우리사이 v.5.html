@@ -30,6 +30,15 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 /* ---------- 상단 바 ---------- */
 .appbar{flex:none;background:#fffdfb;border-bottom:1px solid var(--line);padding:10px 16px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .brand{min-width:0}.brand small{display:block;font-size:10px;letter-spacing:2px;color:var(--accent);font-weight:bold}
+.gtrigger{display:flex;align-items:center;gap:8px;border:0;background:none;padding:2px 4px 2px 0;max-width:250px;min-width:0;font-size:19px;font-weight:bold;color:var(--ink);border-radius:10px}
+.gtrigger .av{width:28px;height:28px;font-size:13px;margin:0;flex:none}
+.gtrigger .gname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gtrigger .i{width:18px;height:18px;color:var(--accent);flex:none;display:block}
+.grow{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:left;color:var(--ink)}
+.grow .av{width:40px;height:40px;font-size:16px;margin:0;flex:none}
+.grow .gi{flex:1;min-width:0}.grow .gi b{display:block;font-size:15px}.grow .gi small{display:block;color:var(--sub);font-size:12px;margin-top:2px}
+.grow .i{width:20px;height:20px;color:var(--accent);flex:none;display:block}
+.grow[aria-checked=true]{border-color:var(--accent);background:var(--lavender-t)}
 .gsel{appearance:none;-webkit-appearance:none;border:0;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%237E63A8' stroke-width='2'/%3E%3C/svg%3E") no-repeat right center;padding:2px 20px 2px 0;font-size:19px;font-weight:bold;max-width:230px;border-radius:6px}
 .barbtns{display:flex;gap:8px;align-items:center;flex:none}
 .iconbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;font-size:16px;padding:0;color:var(--sub)}
@@ -39,9 +48,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .mebtn{border:0;background:none;padding:0}.mebtn .av{width:38px;height:38px;font-size:15px}
 
 /* ---------- 화면(탭) ---------- */
-.screens{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 28px;min-height:0}
+.screens{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 100px;min-height:0}
 .screen[hidden]{display:none}
-.tabbar{flex:none;display:grid;grid-template-columns:repeat(5,1fr);align-items:end;background:#fffdfbf5;border-top:1px solid var(--line);padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);align-items:center;background:#fffdfbf5;border-top:1px solid var(--line);padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px))}
 .tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted);padding:4px 0}
 .i{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .i.s{width:18px;height:18px;vertical-align:-3px;margin-right:4px}
@@ -74,7 +83,7 @@ summary>.i.s{vertical-align:-5px;margin-right:4px}
 .react .i{width:18px;height:18px;vertical-align:-4px;margin-right:4px}
 .react[aria-pressed=true] .i{fill:currentColor;fill-opacity:.25}
 .tab[aria-selected=true]{color:var(--accent);font-weight:bold}.tab[aria-selected=true] .i{fill:currentColor;fill-opacity:.2}
-.fab{width:56px;height:56px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--pink),var(--lavender));line-height:1;color:var(--ink);justify-self:center;margin-top:-26px;box-shadow:0 6px 18px #7e63a855,0 0 0 5px #fffdfb;display:grid;place-items:center}
+.fab{width:56px;height:56px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--pink),var(--lavender));line-height:1;color:var(--ink);position:absolute;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);z-index:30;box-shadow:0 6px 18px #7e63a855;display:grid;place-items:center}
 
 /* ---------- 공통 ---------- */
 .eyebrow{color:var(--accent);font-size:11px;font-weight:bold;letter-spacing:2px}
@@ -185,6 +194,9 @@ details.costs summary::before{content:'▸ '}details[open].costs summary::before
 
 /* ---------- 결산 탭 ---------- */
 .report{background:var(--pink-t);border:0}
+.lockhint{font-size:12.5px;color:var(--sub);background:#ffffffb8;border-radius:12px;padding:10px 12px;margin:14px 0 0;line-height:1.5}
+#s-recap .btn2 .kakao,#s-recap .btn2 .storybtn{background:#fff;border:1px solid #e6dfeb;color:var(--ink);font-weight:normal}
+#s-recap button:disabled{opacity:.45;cursor:default}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
 .stat{background:#ffffffb8;border-radius:13px;padding:12px 6px;text-align:center;font-size:12px;color:var(--sub)}.stat b{display:block;font-size:21px;color:var(--ink)}
 .rline{border-top:1px solid #f3dede;padding:10px 0;font-size:13.5px}.rline:first-child{border-top:0}
@@ -203,7 +215,19 @@ details.costs summary::before{content:'▸ '}details[open].costs summary::before
 .sheet{position:absolute;inset:0;z-index:40;background:#3a334600;display:flex;flex-direction:column;justify-content:flex-end;transition:background .25s}
 .sheet[hidden]{display:none}
 .sheet.show{background:#3a334670}
-.upload{display:grid;place-items:center;position:relative;aspect-ratio:4/3;border:2px dashed #d8cde6;border-radius:14px;background:var(--lavender-t);color:var(--accent);font-size:13px;cursor:pointer;overflow:hidden;margin:0}
+.titlefield{padding:2px 0 8px;border-bottom:1px solid var(--line)}
+.sbody .titlefield input{border:0;background:none;border-radius:0;padding:8px 0 4px;font-size:20px;font-weight:bold}
+.sbody .titlefield input::placeholder{color:#b3adbd;font-weight:normal}
+.cnt{display:block;text-align:right;font-size:11.5px;color:var(--muted)}
+.frows{margin-top:2px}
+.frow{display:flex;align-items:center;gap:12px;min-height:56px;margin:0;border-bottom:1px solid var(--line);font-size:14.5px;font-weight:normal}
+.frow>.i{width:20px;height:20px;color:var(--sub);flex:none}
+.frow .fl{width:68px;flex:none;color:var(--sub);font-size:14px}
+.sbody .frow input:not([type=file]),.sbody .frow select{flex:1;min-width:0;width:auto;border:0;background:none;border-radius:0;padding:8px 0;text-align:right;text-align-last:right;font-size:14.5px}
+.sbody .frow input:focus,.sbody .frow select:focus{outline:none;color:var(--accent)}
+.fsec{margin-top:20px}.fh{font-size:13px;font-weight:bold;margin-bottom:8px}.fh small{font-weight:normal;color:var(--muted);margin-left:4px}
+.fsec textarea{min-height:104px}
+.upload{display:grid;place-items:center;position:relative;width:132px;aspect-ratio:4/3;border:2px dashed #d8cde6;border-radius:14px;background:var(--lavender-t);color:var(--accent);font-size:13px;cursor:pointer;overflow:hidden;margin:0}
 .upload [hidden]{display:none}
 .upload img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .upx{position:absolute;right:8px;top:8px;width:32px;height:32px;border-radius:50%;border:0;background:#fffc;color:var(--ink)}
@@ -364,13 +388,17 @@ input,textarea,select{font-size:14.5px;padding:10px}
 <symbol id="i-peak" viewBox="0 0 24 24"><path d="m3 20 6-11 4 6 3-4 5 9z"/></symbol>
 <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4M4 4h13l-2 4 2 4H4"/></symbol>
 <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
 </defs></svg>
 
 <div class="app" id="app">
   <div class="statusbar" aria-hidden="true"><span id="clock">9:41</span><span>LTE</span></div>
 
   <header class="appbar">
-    <div class="brand"><small>우리 사이</small><select class="gsel" id="group" aria-label="모임 선택"></select></div>
+    <div class="brand"><small>우리 사이</small><button type="button" class="gtrigger" id="groupBtn" aria-haspopup="dialog" aria-label="모임 선택"></button><select class="gsel" id="group" aria-label="모임 선택" hidden></select></div>
     <div class="barbtns"><button class="iconbtn bell" id="bellBtn" aria-label="알림"><svg class="i" aria-hidden="true"><use href="#i-bell"/></svg><span class="badge" id="badge" hidden></span></button><button class="mebtn" id="meBtn" aria-label="내 정보"></button></div>
   </header>
 
@@ -416,6 +444,7 @@ input,textarea,select{font-size:14.5px;padding:10px}
         <div class="monthnav"><button data-month="-1" aria-label="이전 달">‹</button><h2 class="monthLabel"></h2><button data-month="1" aria-label="다음 달">›</button></div>
         <div class="stats"><div class="stat"><b id="meetings">0</b>남긴 기록</div><div class="stat"><b id="photos">0</b>사진</div><div class="stat"><b id="comments">0</b>이야기</div></div>
         <div id="reportList"></div>
+        <p class="lockhint" id="recapLock" hidden>기록이 하나 이상 모이면 결산을 만들 수 있어요. 홈에서 ＋ 버튼으로 첫 기록을 남겨 보세요.</p>
         <button class="primary wide" id="makeRecap" style="margin-top:14px">✦ 월말 결산 만들기</button>
         <div class="btn2"><button class="kakao" id="share"><svg class="i s" aria-hidden="true"><use href="#i-chat"/></svg>단톡방 공유</button><button class="storybtn" id="storyBtn"><svg class="i s" aria-hidden="true"><use href="#i-cam"/></svg>스토리용 저장</button></div>
       </div>
@@ -452,11 +481,11 @@ input,textarea,select{font-size:14.5px;padding:10px}
     </section>
   </div>
 
+  <button class="fab" id="fab" aria-label="기록하기"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
   <nav class="tabbar" role="tablist" aria-label="메뉴">
     <button class="tab" role="tab" data-tab="home" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg>홈</button>
     <button class="tab" role="tab" data-tab="plans" aria-selected="false"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>약속</button>
-    <button class="fab" id="fab" aria-label="기록하기"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>
-    <button class="tab" role="tab" data-tab="map" aria-selected="false"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>도장깨기</button>
+    <button class="tab" role="tab" data-tab="map" aria-selected="false"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg>지역</button>
     <button class="tab" role="tab" data-tab="recap" aria-selected="false"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg>결산</button>
   </nav>
 
@@ -471,6 +500,12 @@ input,textarea,select{font-size:14.5px;padding:10px}
   </div></div>
 
   <!-- 지역 추억 -->
+  <div class="sheet" id="groupSheet" hidden role="dialog" aria-modal="true" aria-labelledby="groupSheetTitle"><div class="sheetbox">
+    <div class="grab"></div>
+    <div class="shead"><h2 id="groupSheetTitle">모임 선택</h2><button type="button" class="xbtn" data-close aria-label="닫기"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="sbody" id="groupList" role="radiogroup" aria-label="모임"></div>
+  </div></div>
+
   <div class="sheet" id="regionSheet" hidden role="dialog" aria-modal="true" aria-labelledby="regionTitle"><div class="sheetbox">
     <div class="grab"></div>
     <div class="shead"><h2 id="regionTitle"></h2><button class="xbtn" data-close aria-label="닫기"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
@@ -507,12 +542,15 @@ input,textarea,select{font-size:14.5px;padding:10px}
     <div class="grab"></div>
     <div class="shead"><h2>오늘을 기록해요</h2><button type="button" class="xbtn" data-close aria-label="닫기"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <div class="sbody">
-      <label for="rGroup" style="margin-top:0">어느 모임이에요?</label><select id="rGroup"></select>
-      <label for="title">만남의 이름</label><input id="title" required maxlength="60" placeholder="예: 바람이 좋았던 강릉">
-      <div class="grid2"><div><label for="date">날짜</label><input id="date" type="date" required></div><div><label for="place">장소(동네)</label><input id="place" maxlength="60" placeholder="예: 강릉"></div></div>
-      <label for="region">지역 · 여행 도장</label><select id="region"><option value="">선택 안 함</option></select>
-      <label for="photo">사진 · 선택</label><label class="upload" id="photoTile" for="photo"><span class="uph">사진 추가</span><img id="photoPrev" alt="" hidden><button type="button" class="upx" id="photoClear" aria-label="사진 지우기" hidden>✕</button></label><input id="photo" type="file" accept="image/*" hidden>
-      <label for="story">그날의 이야기 · 선택</label><textarea id="story" rows="3" maxlength="500" placeholder="우리가 왜 웃었는지, 짧게 남겨볼까요?"></textarea>
+      <div class="titlefield"><input id="title" required maxlength="60" placeholder="어떤 만남이었어요?" aria-label="만남의 이름"><span class="cnt" id="titleCnt">0/60</span></div>
+      <div class="frows">
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span class="fl">모임</span><select id="rGroup"></select></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span class="fl">날짜</span><input id="date" type="date" required></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span class="fl">장소</span><input id="place" maxlength="60" placeholder="예: 강릉"></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg><span class="fl">여행 도장</span><select id="region"><option value="">선택 안 함</option></select></label>
+      </div>
+      <div class="fsec"><div class="fh">사진 <small>선택</small></div><label class="upload" id="photoTile" for="photo"><span class="uph">+ 사진 추가</span><img id="photoPrev" alt="" hidden><button type="button" class="upx" id="photoClear" aria-label="사진 지우기" hidden>✕</button></label><input id="photo" type="file" accept="image/*" hidden></div>
+      <div class="fsec"><div class="fh">그날의 이야기 <small>선택</small></div><textarea id="story" rows="4" maxlength="500" placeholder="우리가 왜 웃었는지, 짧게 남겨볼까요?" aria-label="그날의 이야기"></textarea><span class="cnt" id="storyCnt">0/500</span></div>
       <p class="foot" style="margin-top:8px">사진은 없어도 괜찮아요. 이름만 남겨 두고 이야기는 친구들이 채워도 돼요.</p>
     </div>
     <div class="sfoot"><button class="primary wide">기록 남기기</button></div>
@@ -523,11 +561,14 @@ input,textarea,select{font-size:14.5px;padding:10px}
     <div class="grab"></div>
     <div class="shead"><h2 id="planDlgTitle">약속 잡기</h2><button type="button" class="xbtn" data-close aria-label="닫기"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <div class="sbody">
-      <label for="pGroup" style="margin-top:0">어느 모임이에요?</label><select id="pGroup"></select>
-      <label for="pTitle">무슨 만남이에요?</label><input id="pTitle" required maxlength="40" placeholder="예: 연말 송년회">
-      <div class="grid2"><div><label for="pDate">날짜</label><input id="pDate" type="date" required></div><div><label for="pTime">시간</label><input id="pTime" type="time" required></div></div>
-      <label for="pPlace">장소</label><input id="pPlace" required maxlength="60" placeholder="예: 성수역 3번 출구">
-      <label for="pMemo">메모 · 선택</label><input id="pMemo" maxlength="80" placeholder="예: 회비 3만 원, 늦으면 커피 쏘기">
+      <div class="titlefield"><input id="pTitle" required maxlength="40" placeholder="어떤 약속이에요? 예: 연말 송년회" aria-label="약속 이름"></div>
+      <div class="frows">
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span class="fl">모임</span><select id="pGroup"></select></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg><span class="fl">날짜</span><input id="pDate" type="date" required></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-clock"/></svg><span class="fl">시간</span><input id="pTime" type="time" required></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span class="fl">장소</span><input id="pPlace" required maxlength="60" placeholder="예: 성수역 3번 출구"></label>
+        <label class="frow"><svg class="i" aria-hidden="true"><use href="#i-note"/></svg><span class="fl">메모</span><input id="pMemo" maxlength="80" placeholder="선택 · 예: 회비 3만 원"></label>
+      </div>
     </div>
     <div class="sfoot"><button class="primary wide">저장하고 친구들에게 알리기</button></div>
   </form></div>
@@ -643,8 +684,14 @@ $('meBtn').onclick=()=>setTab('group');
 
 /* ---------- 렌더 ---------- */
 function fillGroupPick(id,sel){const e=$(id);e.innerHTML=data.groups.map(x=>`<option ${x===sel?'selected':''}>${esc(x)}</option>`).join('');e.value=sel}
-function renderGroups(){const g=$('group'),cur=g.value;g.innerHTML=data.groups.map(x=>`<option ${x===cur?'selected':''}>${esc(x)}</option>`).join('');if(!data.groups.includes(cur))g.value=data.groups[0]}
+const GSVG=n=>`<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+function syncGroupBtn(){const g=group();$('groupBtn').innerHTML=`${av(g)}<span class="gname">${esc(g)}</span>${GSVG('chev')}`}
+function renderGroupList(){const cur=group();$('groupList').innerHTML=data.groups.map(g=>{const n=(data.members[g]||[]).filter(Boolean).length+(data.nick[g]?1:0),nick=data.nick[g];return `<button type="button" class="grow" role="radio" aria-checked="${g===cur}" data-g="${esc(g)}">${av(g)}<span class="gi"><b>${esc(g)}</b><small>멤버 ${n}명${nick?` · 내 닉네임 ${esc(nick)}`:' · 닉네임 미설정'}</small></span>${g===cur?GSVG('check'):''}</button>`}).join('')}
+$('groupBtn').onclick=()=>{renderGroupList();openSheet('groupSheet')};
+$('groupList').onclick=ev=>{const b=ev.target.closest('[data-g]');if(!b)return;const g=b.dataset.g;closeSheet('groupSheet');if(g===group())return;$('group').value=g;$('group').dispatchEvent(new Event('change'))};
+function renderGroups(){const g=$('group'),cur=g.value;g.innerHTML=data.groups.map(x=>`<option ${x===cur?'selected':''}>${esc(x)}</option>`).join('');if(!data.groups.includes(cur))g.value=data.groups[0];syncGroupBtn()}
 function render(){
+ syncGroupBtn();
  const year=current.getFullYear(),month=current.getMonth(),items=records();
  $('meBtn').innerHTML=me()?av(me()):'<span class="av" style="background:#eee">?</span>';
  document.querySelectorAll('.monthLabel').forEach(h=>h.textContent=`${year}년 ${month+1}월`);
@@ -837,8 +884,10 @@ async function shareText(text,title){
 
 /* ---------- 기록 남기기 ---------- */
 let recordFromPlan=null;
+function syncCnt(){$('titleCnt').textContent=$('title').value.length+'/60';$('storyCnt').textContent=$('story').value.length+'/500'}
+$('title').addEventListener('input',syncCnt);$('story').addEventListener('input',syncCnt);$('form').addEventListener('reset',()=>setTimeout(syncCnt));
 function openRecord(pre={}){if(!me()){toast('먼저 이 모임에서 쓸 닉네임을 정해 주세요.');return}recordFromPlan=pre.plan||null;$('form').reset();fillGroupPick('rGroup',pre.group||group());$('title').value=pre.title||'';$('date').value=pre.date||todayKey();$('place').value=pre.place||'';
- regionTouched=!!pre.region;$('region').value=pre.region||guessRegion(pre.place||'');openSheet('recordSheet')}
+ regionTouched=!!pre.region;$('region').value=pre.region||guessRegion(pre.place||'');syncCnt();openSheet('recordSheet')}
 let regionTouched=false;
 $('region').innerHTML+=REGIONS.map(([r])=>`<option value="${r}">${r}</option>`).join('');
 $('region').onchange=()=>{regionTouched=true};
@@ -894,6 +943,8 @@ function renderReport(items,month){
  $('reportTitle').textContent=`${month+1}월, 우리의 이야기`;
  $('meetings').textContent=items.length;$('photos').textContent=items.filter(e=>e.photo).length;$('comments').textContent=items.reduce((n,e)=>n+e.comments.length,0);
  $('reportList').innerHTML=items.length?items.map(e=>`<div class="rline"><b>${esc(e.date.slice(5).replace('-','.'))} · ${esc(e.title)}</b><div class="muted">${esc(e.story||e.place||'사진으로 남긴 하루')}</div></div>`).join(''):'<p class="muted" style="margin:0">아직 이달에 남긴 기록이 없어요.</p>';
+ const lock=!items.length;['makeRecap','share','storyBtn'].forEach(id=>{$(id).disabled=lock});
+ $('recapLock').hidden=!lock;
 }
 
 /* ---------- 모임 탭 ---------- */
