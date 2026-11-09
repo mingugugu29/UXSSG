@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기록 레시피 MVP</title>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EFE8DA; --paper:#FFFBF3; --ink:#2B2926; --sub:#7A746B; --line:#E6DccB;
+    --accent:#E8603C; --accent-soft:#FCE6DE; --green:#3E8E6A; --lock:#CFC6B6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  textarea,input{font-family:inherit}
+  .stage{display:flex;gap:40px;justify-content:center;align-items:center;min-height:100vh;padding:24px}
+  .phone{position:relative;width:390px;height:800px;background:var(--paper);border-radius:40px;
+    box-shadow:0 30px 60px rgba(60,40,20,.18),0 0 0 10px #2B2926;overflow:hidden;display:flex;flex-direction:column}
+  .side{max-width:300px;font-size:14px;line-height:1.7;color:var(--sub)}
+  .side h2{font-family:'Gowun Dodum';color:var(--ink);font-size:22px;margin-bottom:8px}
+  .side ol{padding-left:18px;margin:10px 0 16px}
+  .side li{margin-bottom:6px}
+  .side .tag{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:2px 10px;font-size:12px;font-weight:700;margin-bottom:10px}
+  @media (max-width:760px){
+    .stage{padding:0}
+    .side{display:none}
+    .phone{width:100%;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
+  }
+  .top{display:flex;justify-content:space-between;align-items:center;padding:22px 22px 10px}
+  .logo{font-family:'Gowun Dodum';font-size:21px;letter-spacing:-.5px}
+  .logo b{color:var(--accent);font-weight:400}
+  .streak{font-size:13px;font-weight:700;background:#fff;border:1px solid var(--line);border-radius:99px;padding:5px 11px}
+  main{flex:1;overflow-y:auto;padding:6px 20px 24px}
+  main::-webkit-scrollbar{width:0}
+  .tabs{display:flex;border-top:1px solid var(--line);background:#fff;padding:8px 6px 14px}
+  .tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--sub);padding:6px 0}
+  .tabs button .ic{font-size:20px;filter:grayscale(1);opacity:.6}
+  .tabs button.on{color:var(--ink);font-weight:700}
+  .tabs button.on .ic{filter:none;opacity:1}
+
+  .date{font-size:13px;color:var(--sub);margin:6px 0 10px}
+  .qcard{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px 20px;box-shadow:0 6px 18px rgba(60,40,20,.06)}
+  .qlabel{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:3px 10px;border-radius:99px;margin-bottom:12px}
+  .qtext{font-family:'Gowun Dodum';font-size:25px;line-height:1.4;letter-spacing:-.5px;margin-bottom:6px}
+  .qhint{font-size:13px;color:var(--sub);margin-bottom:16px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+  .chip{font-size:13px;border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:6px 12px}
+  .chip:hover,.chip.on{border-color:var(--ink);background:var(--ink);color:#fff}
+  .inp{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;font-size:15px;resize:none;background:var(--paper);outline:none;line-height:1.5}
+  .inp:focus{border-color:var(--ink);background:#fff}
+  .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--sub)}
+  .btn{width:100%;margin-top:14px;background:var(--accent);color:#fff;font-weight:700;font-size:16px;padding:15px;border-radius:14px;transition:.15s}
+  .btn:disabled{background:var(--lock);cursor:not-allowed}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn.dark{background:var(--ink)}
+  .link{display:block;margin:14px auto 0;font-size:13px;color:var(--sub);text-decoration:underline;text-underline-offset:3px}
+
+  .locked{margin-top:18px;position:relative}
+  .locked .blur{filter:blur(5px);pointer-events:none;user-select:none}
+  .lockmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;font-size:14px;font-weight:700}
+  .lockmsg span{font-weight:400;font-size:12.5px;color:var(--sub)}
+  .ans{background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 15px;margin-bottom:9px;display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.5}
+  .ans.mine{border:1.5px solid var(--accent);background:var(--accent-soft)}
+  .ans .who{font-size:11.5px;color:var(--sub);margin-bottom:2px}
+  .heart{font-size:12.5px;color:var(--sub);white-space:nowrap;padding:2px 4px}
+  .heart.on{color:var(--accent);font-weight:700}
+  .sec{font-family:'Gowun Dodum';font-size:19px;margin:22px 0 10px}
+  .unlock{text-align:center;padding:8px 0 4px}
+  .unlock .big{font-size:38px}
+  .unlock h3{font-family:'Gowun Dodum';font-size:22px;margin-top:4px}
+  .unlock p{font-size:13px;color:var(--sub);margin-top:2px}
+  .cta{margin-top:18px;background:var(--ink);color:#fff;border-radius:20px;padding:18px}
+  .cta small{color:#CFC6B6;font-size:12px}
+  .cta h4{font-family:'Gowun Dodum';font-size:19px;font-weight:400;margin:4px 0 12px;line-height:1.4}
+  .cta .btn{margin-top:0;background:var(--accent)}
+  .note{font-size:12.5px;color:var(--sub);text-align:center;margin-top:16px}
+
+  .cats{display:flex;gap:7px;overflow-x:auto;margin:6px -20px 14px;padding:0 20px}
+  .cats::-webkit-scrollbar{height:0}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .fcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px 14px;text-align:left;display:flex;flex-direction:column;gap:6px;min-height:150px;transition:.15s}
+  .fcard:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(60,40,20,.08)}
+  .fcard .em{font-size:28px}
+  .fcard .nm{font-weight:700;font-size:15px}
+  .fcard .ds{font-size:12px;color:var(--sub);line-height:1.45;flex:1}
+  .time{display:inline-block;align-self:flex-start;font-size:11px;font-weight:700;color:var(--green);background:#E3F1EA;border-radius:99px;padding:2px 8px}
+  .hero{background:var(--accent-soft);border-radius:18px;padding:16px;margin-bottom:14px}
+  .hero h3{font-family:'Gowun Dodum';font-size:20px;font-weight:400;line-height:1.4}
+  .hero p{font-size:12.5px;color:var(--sub);margin-top:4px}
+
+  .back{font-size:14px;color:var(--sub);margin:4px 0 10px}
+  .dhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+  .dhead .em{font-size:40px}
+  .dhead h2{font-family:'Gowun Dodum';font-size:24px;font-weight:400}
+  .dbody{font-size:14px;line-height:1.65;color:#4A463F}
+  .steps{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:14px 0}
+  .steps li{font-size:14px;margin:4px 0 4px 18px}
+  .ex{background:#fff;border:1px dashed #D4C9B5;border-radius:16px;padding:14px 16px;margin-bottom:10px;font-size:13.5px;line-height:1.6}
+  .ex .q{color:var(--sub);font-size:12px}
+  .ex .who{font-size:11.5px;color:var(--accent);font-weight:700;margin-bottom:6px}
+
+  .prog{display:flex;gap:6px;margin:6px 0 18px}
+  .prog i{flex:1;height:5px;border-radius:9px;background:var(--line)}
+  .prog i.on{background:var(--accent)}
+  .wstep{font-size:12.5px;color:var(--sub);margin-bottom:6px}
+  .wq{font-family:'Gowun Dodum';font-size:24px;line-height:1.4;margin-bottom:16px}
+  .two{display:flex;gap:8px}
+  .two .btn{flex:1}
+
+  .week{display:flex;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:12px}
+  .day{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11.5px;color:var(--sub)}
+  .dot{width:28px;height:28px;border-radius:50%;background:var(--paper);border:1.5px dashed var(--lock);display:flex;align-items:center;justify-content:center;font-size:14px}
+  .dot.on{background:var(--accent);border:none;color:#fff}
+  .dot.today{border-color:var(--ink);border-style:solid}
+  .stats{display:flex;gap:10px;margin-bottom:6px}
+  .stat{flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+  .stat b{display:block;font-size:22px}
+  .stat span{font-size:12px;color:var(--sub)}
+  .entry{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+  .entry .eh{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:8px}
+  .entry .eh b{color:var(--ink);font-size:13px}
+  .entry .l{font-size:14px;line-height:1.55;margin-bottom:4px}
+  .entry .l small{display:block;color:var(--sub);font-size:11.5px}
+  .empty{text-align:center;padding:40px 10px;color:var(--sub);font-size:14px;line-height:1.7}
+  .empty .big{font-size:44px;margin-bottom:8px}
+
+  .toast{position:absolute;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13.5px;padding:11px 18px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .room{background:var(--ink);color:#fff;border-radius:20px;padding:16px 16px 14px;margin:4px 0 12px}
+  .room .rt{display:flex;justify-content:space-between;align-items:center}
+  .room h3{font-family:'Gowun Dodum';font-size:20px;font-weight:400}
+  .room small{color:#CFC6B6;font-size:12px}
+  .inv{font-size:12px;font-weight:700;background:var(--accent);color:#fff;border-radius:99px;padding:6px 11px}
+  .members{display:flex;gap:12px;margin-top:12px;align-items:flex-end}
+  .mem{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#CFC6B6;position:relative}
+  .av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+  .mem .ck{position:absolute;top:-2px;right:-4px;background:var(--green);color:#fff;border-radius:50%;width:17px;height:17px;font-size:10px;display:flex;align-items:center;justify-content:center;border:2px solid var(--ink)}
+  .subs{display:flex;background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:12px}
+  .subs button{flex:1;padding:8px;font-size:13px;border-radius:9px;color:var(--sub)}
+  .subs button.on{background:var(--ink);color:#fff;font-weight:700}
+  .post{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 15px;margin-bottom:10px}
+  .post.mine{border:1.5px solid var(--accent)}
+  .ph{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;font-weight:700}
+  .ph .av{width:28px;height:28px;font-size:15px}
+  .ph span{font-weight:400;color:var(--sub);font-size:11.5px}
+  .ptxt{font-size:14.5px;line-height:1.55}
+  .reacts{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .rb{font-size:13px;border:1px solid var(--line);border-radius:99px;padding:3px 9px;background:var(--paper)}
+  .rb.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+  .cmts{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+  .cmt{font-size:13px;line-height:1.5;margin-bottom:4px}
+  .cmt b{margin-right:6px}
+  .cin{display:flex;gap:6px;margin-top:6px}
+  .cin input{flex:1;border:1px solid var(--line);border-radius:99px;padding:7px 12px;font-size:13px;background:var(--paper);outline:none}
+  .cin button{font-size:13px;font-weight:700;color:var(--accent);padding:0 6px}
+  .wait{display:flex;justify-content:space-between;align-items:center;background:var(--paper);border:1.5px dashed var(--lock);border-radius:18px;padding:12px 14px;margin-bottom:10px;font-size:13.5px}
+  .poke{background:var(--ink);color:#fff;font-size:12.5px;font-weight:700;border-radius:99px;padding:7px 12px}
+  .poke:disabled{background:var(--lock)}
+  .nbook{background:repeating-linear-gradient(#FFFBF3 0 31px,#E9DFCC 31px 32px);border:1px solid var(--line);border-radius:16px;padding:12px 16px;line-height:32px;font-family:'Gowun Dodum';font-size:16px}
+  .nbook .by{font-family:'Noto Sans KR';font-size:11px;color:var(--accent);font-weight:700;margin-right:6px}
+  .wk{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px}
+  .wk .d{font-weight:700;font-size:13px;background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:6px 9px}
+  .wk .q2{font-size:12px;color:var(--sub)}
+  .wk .a2{font-size:14px;margin-top:3px;line-height:1.5}
+  .wk .m2{font-size:11.5px;color:var(--sub);margin-top:3px}
+  .photo-pick{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:220px;border:2px dashed var(--lock);border-radius:16px;color:var(--sub);font-size:14px;cursor:pointer;background:var(--paper);overflow:hidden}
+  .photo-pick img{width:100%;height:100%;object-fit:cover}
+  .entry img{width:100%;border-radius:10px;margin-top:4px}
+  .fcard{position:relative}
+  .nb{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;background:var(--accent);color:#fff;border-radius:99px;padding:2px 7px}
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:12px}
+  .tile{aspect-ratio:1;border:1.5px dashed var(--lock);border-radius:14px;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12.5px;font-weight:700;color:var(--sub);position:relative;overflow:hidden}
+  .tile:hover{border-color:var(--accent);color:var(--accent)}
+  .tile .te{font-size:20px;opacity:.35;filter:grayscale(1)}
+  .tile.done{border:none;background:transparent}
+  .stamp{position:absolute;inset:3px;border-radius:50%;border:3px double #D6402A;color:#D6402A;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);background-color:rgba(232,96,60,.08);background-size:cover;background-position:center;line-height:1.15}
+  .stamp.photo{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7);border-color:#fff}
+  .stamp b{font-size:13px}
+  .stamp small{font-size:9px;font-weight:400}
+  .stamp.new{animation:thud .55s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes thud{0%{transform:rotate(-12deg) scale(2.4);opacity:0}100%{transform:rotate(-12deg) scale(1);opacity:1}}
+  .goal{grid-row:5;grid-column:2/5;border-radius:14px;background:var(--accent-soft);padding:10px 12px;font-size:12.5px;line-height:1.5;text-align:left;color:var(--ink)}
+  .goal b{color:var(--accent)}
+  .pbar{height:8px;background:#4A463F;border-radius:9px;overflow:hidden}
+  .pbar i{display:block;height:100%;background:var(--accent);border-radius:9px}
+  .sheet-bg{position:absolute;inset:0;background:rgba(43,41,38,.45);display:flex;align-items:flex-end;z-index:5}
+  .sheet{background:var(--paper);width:100%;border-radius:24px 24px 0 0;padding:20px 20px 26px;max-height:88%;overflow-y:auto;animation:up .25s ease}
+  .sheet img.big{width:100%;border-radius:14px;margin:6px 0 10px;max-height:240px;object-fit:cover}
+  @keyframes up{from{transform:translateY(40px);opacity:0}}
+  .toast{z-index:10}
+  .mapbox{background:#E4EEF0;border:1px solid var(--line);border-radius:20px;padding:12px 18px}
+  .kmap{width:100%;height:auto;display:block;max-height:430px}
+  .pc{stroke:#fff;stroke-width:1.6;vector-effect:non-scaling-stroke;cursor:pointer;transition:filter .2s}
+  .pc:hover{filter:brightness(.92)}
+  .pc.got{stroke-width:2.6;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}
+  .pc.new{transform-box:fill-box;transform-origin:center;animation:piece .65s cubic-bezier(.3,1.6,.5,1)}
+  @keyframes piece{0%{transform:scale(1.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  .lb{fill:#9A9286;font-weight:700;paint-order:stroke;stroke:#fff;font-family:'Noto Sans KR',sans-serif}
+  .lb.on{fill:#fff;stroke:rgba(0,0,0,.5)}
+  .goal2{display:block;width:100%;margin-top:10px;border-radius:14px;background:var(--accent-soft);padding:11px 14px;font-size:13px;text-align:left}
+  .goal2 b{color:var(--accent)}
+  .pop{animation:pop .45s ease}
+  @keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone">
+    <header class="top">
+      <div class="logo">기록 <b>레시피</b></div>
+      <div class="streak" id="streak">🔥 0일</div>
+    </header>
+    <main id="view"></main>
+    <nav class="tabs" id="tabs">
+      <button data-tab="today"><span class="ic">✏️</span>오늘의 한 줄</button>
+      <button data-tab="recipes"><span class="ic">📖</span>레시피</button>
+      <button data-tab="room"><span class="ic">👯</span>교환일기</button>
+      <button data-tab="me"><span class="ic">🗂️</span>내 기록</button>
+    </nav>
+    <div id="sheet"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <aside class="side">
+    <span class="tag">MVP 시연 가이드</span>
+    <h2>기록 안 하는 사람도<br>한 줄은 쓰게</h2>
+    <p>가입도, 빈 페이지도 없이 <b>질문 하나</b>로 시작해요. 한 줄을 써야 다른 사람들의 답이 열려요.</p>
+    <ol>
+      <li><b>오늘의 한 줄</b>: 질문에 답하거나 빠른 답 칩을 눌러 보세요</li>
+      <li>올리면 <b>잠겨 있던 남들의 답</b>이 열려요</li>
+      <li>아래 카드로 <b>레시피(기록 포맷)</b>에 이어 써 보세요</li>
+      <li><b>레시피</b> 탭에서 21개 포맷과 남들의 예시를 구경하세요</li>
+      <li>레시피 맨 앞 <b>🗺️ 여행 도장깨기</b>: 빈칸 지역을 눌러 사진·한 줄로 도장 쾅! → 칭호가 올라가요</li>
+      <li><b>교환일기</b> 탭: 써야 친구 답이 열려요 → 반응·댓글 달기 → 안 쓴 친구 <b>콕 찌르기</b>(3초 뒤 친구가 써요) → 내일 질문 내기</li>
+      <li>교환일기 <b>릴레이 노트</b>: 친구 문장에 이어 쓰고 바통 넘기기</li>
+      <li><b>내 기록</b> 탭에 쌓인 기록과 연속 기록을 확인하세요</li>
+    </ol>
+    <p>질문이 부담스러우면 <b>"다른 질문 줄래요"</b>로 바꿀 수 있어요.</p>
+  </aside>
+</div>
+
+<script>
+const QUESTIONS = [
+  {q:"오늘 먹은 것 중에<br>제일 맛있었던 건?", hint:"메뉴 이름만 써도 충분해요", quick:["떡볶이","편의점 삼각김밥","엄마 집밥","아아 한 잔"], fmt:"review",
+   others:[["회사 앞 순대국. 비 와서 더 맛있었음",42],["퇴근길에 산 붕어빵 3개 🐟",31],["아무것도 없음… 내일은 제대로 먹을래",27],["동기가 사 준 마라탕",18],["엄마가 싸 준 김밥",12]]},
+  {q:"오늘 하루를<br>날씨로 표현하면?", hint:"이모지 하나만 골라도 돼요", quick:["☀️ 맑음","⛅ 구름 조금","🌧️ 비","⛈️ 천둥번개"], fmt:"weather",
+   others:[["⛅ 오전엔 흐렸는데 퇴근하니까 갬",38],["🌧️ 회의만 4개… 그냥 비",35],["☀️ 월급날이라 맑음",29],["🌫️ 안개. 뭐 했는지 기억 안 남",17],["⛈️ 지하철에서 폰 떨어뜨림",9]]},
+  {q:"오늘 나를 웃게 한<br>한 가지는?", hint:"아주 사소해도 좋아요", quick:["친구 카톡","고양이 영상","칭찬 들음","날씨"], fmt:"thanks",
+   others:[["팀장님이 오늘 칼퇴하라고 함",51],["유튜브 알고리즘이 띄운 강아지",33],["친구가 보낸 옛날 사진",24],["버스 바로 탐 ㅋㅋ",20],["택배 왔다!",14]]},
+  {q:"오늘 나에게 점수를 준다면<br>몇 점? 이유는?", hint:"숫자만 써도 괜찮아요", quick:["100점","70점","50점","30점"], fmt:"3line",
+   others:[["80점. 할 일 다 끝냄",40],["60점. 늦잠 잤지만 운동은 함",28],["100점. 그냥 살아남았으니까",36],["40점. 내일의 나에게 맡긴다",22],["70점. 무난한 하루",11]]}
+];
+
+const FORMATS = [
+  {id:"stamp", em:"🗺️", name:"여행 도장깨기", time:"1분", cat:"여행", badge:"NEW", desc:"다녀온 지역에 사진과 한 줄로 도장을 찍어요. 전국 17곳을 다 모아 보세요.", steps:[], ex:[]},
+  {id:"3line", em:"📝", name:"3줄 일기", time:"1분", cat:"하루", desc:"있었던 일, 느낀 점, 내일 할 일. 딱 세 줄로 하루를 닫아요.",
+   who:"일기를 써 보고 싶은데 매번 길게 쓰다 지쳐 그만둔 사람", steps:[["오늘 있었던 일 하나는?","예) 발표 준비하느라 종일 바빴다"],["그때 기분은 어땠어요?","예) 떨렸지만 끝나니 후련"],["내일의 나에게 한 마디","예) 일찍 자기!"]],
+   ex:[["점심에 팀원들이랑 처음 밥 먹음","생각보다 다들 편해서 다행","내일은 내가 먼저 말 걸기"],["과제 마감 겨우 맞춤","뿌듯한데 피곤함","주말엔 아무것도 안 하기"]]},
+  {id:"weather", em:"🌤️", name:"감정 날씨", time:"30초", cat:"감정", desc:"오늘 마음을 날씨로 고르고 이유를 한 줄. 감정을 말로 꺼내는 연습이에요.",
+   who:"기분은 있는데 뭐라고 적어야 할지 모르는 사람", steps:[["오늘 마음의 날씨는?","☀️ ⛅ 🌧️ ⛈️ 🌫️ 중에 골라 보세요"],["왜 그런 날씨였어요?","예) 아침에 지각해서 계속 흐렸음"]],
+   ex:[["🌧️","친구랑 약속 깨져서"],["☀️","오랜만에 푹 잤다"]]},
+  {id:"thanks", em:"🙏", name:"감사 3가지", time:"1분", cat:"감정", desc:"오늘 고마웠던 것 세 가지. 사소할수록 좋아요.",
+   who:"요즘 하루가 다 비슷하게 느껴지는 사람", steps:[["고마웠던 것 하나","예) 따뜻한 커피"],["두 번째","예) 자리 양보해 준 사람"],["세 번째","예) 무사히 퇴근한 나"]],
+   ex:[["버스 바로 옴","동생이 설거지함","비 안 옴"],["점심 맛있었음","칭찬 들음","일찍 끝남"]]},
+  {id:"kpt", em:"🔁", name:"KPT 회고", time:"5분", cat:"회고", desc:"Keep(계속할 것), Problem(문제), Try(다음에 해 볼 것). 일이나 프로젝트를 돌아볼 때 써요.",
+   who:"한 주나 프로젝트를 정리하고 다음을 준비하고 싶은 사람", steps:[["Keep: 잘해서 계속하고 싶은 건?","예) 매일 아침 할 일 3개 정하기"],["Problem: 아쉬웠던 건?","예) 회의가 너무 길었음"],["Try: 다음엔 뭘 해 볼까?","예) 회의 전에 안건 먼저 공유"]],
+   ex:[["팀원들이랑 매일 짧게 공유함","마감 직전에 몰아서 함","하루 한 번 중간 점검"],["운동 주 2회 지킴","야식 먹음","저녁 8시 이후 금식"]]},
+  {id:"review", em:"⭐", name:"한 줄 리뷰", time:"30초", cat:"리뷰", desc:"먹은 것, 본 것, 읽은 것을 별점과 한 줄로. 쌓이면 나만의 맛집·취향 지도가 돼요.",
+   who:"'그거 뭐였더라?' 하고 자주 까먹는 사람", steps:[["뭘 먹었거나 봤어요?","예) 성수 OO카페 아인슈페너"],["별점은? (1~5)","예) 4"],["한 줄 평","예) 크림이 진짜 진함, 또 갈 듯"]],
+   ex:[["넷플릭스 신작 드라마","3","초반 2화만 재밌음"],["회사 앞 순대국","5","비 오는 날 무조건 여기"]]},
+  {id:"praise", em:"👏", name:"칭찬 일기", time:"1분", cat:"하루", desc:"오늘 내가 잘한 일 하나만. 자존감 지키는 가장 짧은 기록이에요.",
+   who:"자꾸 못한 것만 떠올리는 사람", steps:[["오늘 내가 잘한 일 하나는?","예) 미루던 메일 보냄"],["스스로에게 한 마디","예) 생각보다 잘하네?"]],
+   ex:[["아침에 알람 한 번에 일어남","오늘의 나 칭찬해"],["모르는 거 솔직하게 물어봄","용기 냈다!"]]},
+  {id:"trip", em:"🧳", name:"여행·나들이 기록", time:"3분", cat:"여행", desc:"어디 갔는지, 제일 좋았던 순간, 다음에 또 갈지. 사진만 남기면 금방 잊혀요.",
+   who:"놀러 가면 사진은 많은데 기억은 금방 흐려지는 사람", steps:[["어디 다녀왔어요?","예) 친구들이랑 성수 팝업"],["제일 좋았던 순간은?","예) 줄 서다 우연히 들어간 카페"],["다음에 또 갈래요? 이유는?","예) 또 감, 평일에 가면 덜 붐빌 듯"]],
+   ex:[["강릉 당일치기","바다 보면서 먹은 커피","또 감! 다음엔 1박"],["한강 불꽃축제","불꽃 터질 때 다 같이 소리 지름","사람 너무 많아서 패스"]]},
+  {id:"oneword", em:"🔤", name:"한 단어 일기", time:"30초", cat:"초간단", desc:"오늘을 딱 한 단어로. 기록이 처음이라면 여기서 시작하세요.",
+   who:"기록이 처음이거나 길게 쓰는 게 부담스러운 사람", steps:[["오늘을 한 단어로 표현하면?","예) 버팀"],["왜 그 단어예요? (안 써도 돼요)","예) 월요일이라 그냥 버텼다"]],
+   ex:[["후련","드디어 과제 제출"],["배부름","점심 저녁 다 고기"]]},
+  {id:"tmi", em:"🙊", name:"오늘의 TMI", time:"30초", cat:"초간단", desc:"아무도 안 궁금하지만 말하고 싶은 오늘의 사소한 일 하나.",
+   who:"일기는 거창해서 싫은데 수다는 좋아하는 사람", steps:[["오늘의 TMI 하나 풀어 주세요","예) 양말 짝짝이로 신고 출근함"]],
+   ex:[["편의점 1+1 두 번 성공함"],["오늘 엘리베이터 혼자 탐. 행복"]]},
+  {id:"song", em:"🎧", name:"오늘의 노래", time:"30초", cat:"초간단", desc:"오늘 들은 노래 한 곡과 이유. 쌓이면 나만의 계절별 플레이리스트가 돼요.",
+   who:"음악 들으면서 그날 기분을 기억하는 사람", steps:[["오늘 제일 많이 들은 노래는?","예) 출근길 플레이리스트 1번 곡"],["왜 이 노래였어요?","예) 비 와서 잔잔한 게 당김"]],
+   ex:[["아이유 - 밤편지","잠 안 와서"],["신나는 팝송","운동할 때 텐션 업"]]},
+  {id:"spend", em:"💸", name:"소비 일기", time:"1분", cat:"하루", desc:"오늘 산 것, 가격, 잘 샀는지 한 줄 평. 돈이 어디로 가는지 보여요.",
+   who:"월말마다 '내 돈 어디 갔지?' 하는 사람", steps:[["오늘 산 것 중 하나는?","예) 아이스 아메리카노"],["얼마였어요?","예) 4,500원"],["잘 샀다? 괜히 샀다? 이유는?","예) 잘 샀다. 이거 없었으면 졸았음"]],
+   ex:[["새 운동화","89,000원","잘 샀다! 매일 신을 듯"],["야식 치킨","23,000원","괜히 샀다… 반 남김"]]},
+  {id:"heard", em:"💬", name:"오늘 들은 말 한 마디", time:"30초", cat:"하루", desc:"오늘 누군가에게 들은 말 중 기억에 남는 한 마디. 좋은 말도, 서운한 말도 괜찮아요.",
+   who:"말 한마디에 하루 기분이 바뀌는 사람", steps:[["오늘 들은 말 중 기억나는 한 마디","예) \"오늘 발표 좋았어\""],["누가 했고, 듣고 어땠어요?","예) 팀장님. 하루 종일 기분 좋았음"]],
+   ex:[["\"밥은 먹었어?\"","엄마. 괜히 찡했다"],["\"그거 네 탓 아니야\"","친구. 위로됐다"]]},
+  {id:"photo", em:"📷", name:"사진 한 장 일기", time:"1분", cat:"하루", desc:"오늘 찍은 사진 한 장에 한 줄을 붙여요. 글 쓰기 싫은 날에도 할 수 있어요.",
+   who:"글보다 사진으로 기억하는 사람", steps:[["오늘의 사진 한 장","사진을 골라 주세요","photo"],["이 사진에 한 줄 붙인다면?","예) 퇴근길 하늘이 예뻐서 찍음"]],
+   ex:[["📷 노을 사진","퇴근길 하늘 미쳤다"],["📷 점심 도시락","처음으로 도시락 싸 옴"]]},
+  {id:"graph", em:"📈", name:"감정 그래프", time:"1분", cat:"감정", desc:"아침·점심·저녁 기분을 0~10점으로. 하루의 기분 곡선이 보여요.",
+   who:"기분이 하루에도 자주 오르락내리락하는 사람", steps:[["아침 기분은 몇 점? (0~10)","예) 4"],["점심 기분은?","예) 7"],["저녁 기분은?","예) 9"],["제일 크게 바뀐 이유는?","예) 퇴근하고 친구 만남"]],
+   ex:[["3","6","8","점심에 칭찬 들음"],["7","4","5","오후 회의가 길었음"]]},
+  {id:"worry", em:"🌀", name:"걱정 쏟아내기", time:"3분", cat:"감정", desc:"걱정을 다 적고, 내가 할 수 있는 것과 없는 것으로 나눠요. 머리가 가벼워져요.",
+   who:"자기 전에 걱정이 꼬리를 무는 사람", steps:[["지금 걱정되는 거 다 적어 보세요","예) 발표, 이번 달 카드값, 친구랑 서먹함"],["그중 내가 할 수 있는 건?","예) 발표 연습 2번 하기"],["내가 어쩔 수 없는 건? (내려놓기)","예) 친구 기분은 친구 몫"]],
+   ex:[["면접, 자소서","자소서 오늘 1개 쓰기","결과는 내가 못 정함"],["이사, 돈","부동산 2곳 연락","집값은 내가 못 바꿈"]]},
+  {id:"month", em:"🗓️", name:"한 달 회고", time:"5분", cat:"회고", desc:"이번 달 기억에 남는 일, 아쉬운 것, 다음 달 해 볼 것. 한 달에 한 번이면 충분해요.",
+   who:"한 달이 어떻게 지나갔는지 모르겠는 사람", steps:[["이번 달 제일 기억에 남는 일은?","예) 처음으로 혼자 여행 감"],["아쉬웠던 건?","예) 운동 한 번도 안 함"],["다음 달 해 보고 싶은 건?","예) 주 1회 산책"]],
+   ex:[["UX 수업 첫 팀 프로젝트","밤샘 너무 많이 함","미리미리 하기"],["친구 결혼식","돈 너무 많이 씀","소비 일기 쓰기"]]},
+  {id:"bucket", em:"🪣", name:"버킷리스트 한 줄", time:"30초", cat:"회고", desc:"언젠가 꼭 해 보고 싶은 것 하나. 쌓이면 나만의 버킷리스트가 돼요.",
+   who:"하고 싶은 건 많은데 자꾸 잊어버리는 사람", steps:[["언젠가 꼭 해 보고 싶은 것 하나","예) 오로라 보기"],["언제쯤 하고 싶어요?","예) 30살 되기 전"]],
+   ex:[["스쿠버다이빙 자격증","내년 여름"],["혼자 해외여행","올해 안에"]]},
+  {id:"future", em:"💌", name:"1년 뒤 나에게", time:"3분", cat:"회고", desc:"1년 뒤의 나에게 쓰는 짧은 편지. 1년 뒤에 앱이 다시 보여 줘요.",
+   who:"지금의 고민을 나중에 웃으며 보고 싶은 사람", steps:[["1년 뒤 나는 뭐 하고 있을까?","예) 원하는 회사에서 일하고 있기를"],["지금 나는 어떤 고민 중이야?","예) 이 길이 맞는지 모르겠음"],["1년 뒤 나에게 한 마디","예) 그때도 잘 버티고 있지?"]],
+   ex:[["UX 디자이너로 일하는 중","포트폴리오가 막막함","그래도 해냈지?"],["독립해서 살고 있기를","돈 모으는 게 힘듦","고생했다 진짜"]]},
+  {id:"balance", em:"⚖️", name:"밸런스 게임", time:"30초", cat:"친구랑", desc:"둘 중 하나 고르고 이유 한 줄. 교환일기 방에서 친구들 선택이랑 비교하면 더 재밌어요.",
+   who:"친구들이랑 가볍게 수다 떨고 싶은 사람", steps:[["평생 여름 vs 평생 겨울?","하나 고르세요"],["이유는?","예) 겨울. 껴입으면 됨"]],
+   ex:[["여름","추운 게 더 싫어"],["겨울","붕어빵 먹으려고"]]},
+  {id:"askfriend", em:"🙋", name:"서로에게 질문 하나", time:"1분", cat:"친구랑", desc:"친구에게 묻고 싶은 질문을 하나 던지고 나도 먼저 답해요. 몰랐던 친구 모습을 알게 돼요.",
+   who:"오래된 친구랑도 새로운 얘기를 하고 싶은 사람", steps:[["친구에게 묻고 싶은 질문 하나","예) 요즘 제일 듣고 싶은 말은?"],["내가 먼저 답한다면?","예) '수고했어'"]],
+   ex:[["10년 뒤에 우리 뭐 하고 있을까?","같이 여행 다니고 있을 듯"],["요즘 제일 행복한 순간은?","퇴근하고 씻고 누울 때"]]},
+  {id:"relay", em:"🔗", name:"릴레이 문장", time:"1분", cat:"친구랑", desc:"친구가 쓴 문장 뒤에 이어 쓰고 다음 친구에게 넘겨요. 노트를 돌려 쓰던 교환일기 그대로예요.",
+   who:"교환일기를 해 봤거나, 친구들이랑 이야기 만들기를 좋아하는 사람", steps:[["\"오늘 아침 문을 열었더니…\" 뒤를 이어 써 보세요","예) 문 앞에 모르는 택배가 와 있었다"],["다음 친구에게 넘길 첫 문장은?","예) 상자를 열어 보니"]],
+   ex:[["고양이가 앉아 있었다","그런데 그 고양이가 말을 했다"],["눈이 오고 있었다","그래서 우리는 출근을 포기하고"]]}
+];
+const CATS = ["전체","초간단","하루","감정","회고","리뷰","여행","친구랑"];
+const NICK = ["익명의 감자","퇴근하고싶은 고양이","월요일 생존자","야근 탈출러","카페인 중독자","오늘도 무사"];
+
+let S = {tab:"today", qi:new Date().getDate()%QUESTIONS.length, posted:false, mine:"", liked:{}, entries:[], cat:"전체", fmt:null, w:null};
+S.stamps=null; S.board=false; S.sheet=null;
+try{ const s = JSON.parse(localStorage.getItem("recipe-mvp")||"null"); if(s){ S.entries=s.entries||[]; S.stamps=s.stamps||null; } }catch(e){}
+function save(){ try{ localStorage.setItem("recipe-mvp", JSON.stringify({entries:S.entries,stamps:S.stamps})); }catch(e){} }
+
+const $ = s => document.querySelector(s);
+const esc = t => String(t).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const key = d => `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+const today = new Date();
+const fmtById = id => FORMATS.find(f => f.id===id);
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),1800); }
+
+function streak(){
+  const days = new Set(S.entries.map(e=>e.date)); let n=0; const d=new Date(today);
+  while(days.has(key(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function addEntry(type, em, lines){
+  S.entries.unshift({date:key(today), label:`${today.getMonth()+1}월 ${today.getDate()}일`, type, em, lines});
+  save();
+}
+
+/* ---------- 오늘의 한 줄 ---------- */
+function viewToday(){
+  const Q = QUESTIONS[S.qi];
+  const dateTxt = `${today.getMonth()+1}월 ${today.getDate()}일 · 오늘 ${Q.others.length*37}명이 답했어요`;
+  if(!S.posted){
+    return `
+      <p class="date">${dateTxt}</p>
+      <div class="qcard pop">
+        <span class="qlabel">오늘의 질문</span>
+        <div class="qtext">${Q.q}</div>
+        <p class="qhint">${Q.hint}</p>
+        <div class="chips">${Q.quick.map(c=>`<button class="chip" data-quick="${esc(c)}">${esc(c)}</button>`).join("")}</div>
+        <textarea id="ans" class="inp" rows="2" maxlength="60" placeholder="한 줄이면 충분해요"></textarea>
+        <div class="row"><span>🔒 닉네임으로 익명 공개돼요</span><span id="cnt">0/60</span></div>
+        <button class="btn" id="post" disabled>한 줄 올리고 남들 답 보기</button>
+      </div>
+      <button class="link" id="shuffle">↻ 이 질문 별로예요, 다른 질문 줄래요</button>
+      <div class="locked">
+        <div class="blur">${Q.others.slice(0,3).map(o=>`<div class="ans"><div>${esc(o[0])}</div></div>`).join("")}</div>
+        <div class="lockmsg">🔒 한 줄 쓰면 열려요<span>다른 사람들은 뭐라고 썼을까요?</span></div>
+      </div>`;
+  }
+  const F = fmtById(Q.fmt);
+  return `
+    <div class="unlock pop"><div class="big">🔓</div><h3>열렸다! 다른 사람들의 한 줄</h3><p>오늘 기록 완료 · 🔥 연속 ${streak()}일째</p></div>
+    <div class="ans mine"><div><div class="who">나</div>${esc(S.mine)}</div></div>
+    ${Q.others.map((o,i)=>{const on=S.liked[S.qi+"-"+i]; return `
+      <div class="ans"><div><div class="who">${NICK[i%NICK.length]}</div>${esc(o[0])}</div>
+      <button class="heart ${on?"on":""}" data-like="${i}">${on?"♥":"♡"} ${o[1]+(on?1:0)}</button></div>`}).join("")}
+    <div class="cta">
+      <small>한 줄 썼으면 반은 한 거예요</small>
+      <h4>${F.em} ${F.name}(${F.time})로<br>조금만 더 이어 써 볼래요?</h4>
+      <button class="btn" data-start="${F.id}">이어 쓰기</button>
+    </div>
+    <p class="note">⏰ 내일 밤 9시에 새 질문이 도착해요</p>`;
+}
+function bindToday(){
+  const a=$("#ans");
+  if(a){
+    const upd=()=>{ $("#cnt").textContent=`${a.value.length}/60`; $("#post").disabled=!a.value.trim(); };
+    a.addEventListener("input",upd);
+    document.querySelectorAll("[data-quick]").forEach(b=>b.onclick=()=>{ a.value=b.dataset.quick+" "; a.focus(); upd(); });
+    $("#post").onclick=()=>{ S.mine=a.value.trim(); S.posted=true; addEntry("오늘의 질문","✏️",[[QUESTIONS[S.qi].q.replace(/<br>/g," "),S.mine]]); render(); toast("첫 한 줄 완료! 🎉"); };
+    $("#shuffle").onclick=()=>{ S.qi=(S.qi+1)%QUESTIONS.length; render(); };
+  }
+  document.querySelectorAll("[data-like]").forEach(b=>b.onclick=()=>{ const k=S.qi+"-"+b.dataset.like; S.liked[k]=!S.liked[k]; render(true); });
+}
+
+/* ---------- 레시피 ---------- */
+/* ---------- 여행 도장깨기 ---------- */
+const REGIONS=[
+ ["incheon","인천","✈️",0,0],["seoul","서울","🏙️",0,1],["gyeonggi","경기","🎡",0,2],["gangwon","강원","🏔️",0,3],
+ ["chungnam","충남","🏖️",1,0],["sejong","세종","🏛️",1,1],["chungbuk","충북","⛰️",1,2],["gyeongbuk","경북","🏯",1,3],
+ ["jeonbuk","전북","🍲",2,0],["daejeon","대전","🥐",2,1],["daegu","대구","🍎",2,2],["ulsan","울산","🐋",2,3],
+ ["gwangju","광주","🎨",3,0],["jeonnam","전남","🌃",3,1],["gyeongnam","경남","🌸",3,2],["busan","부산","🌊",3,3],
+ ["jeju","제주","🍊",4,0]];
+const TITLES=[[0,"여행 새싹","🌱"],[3,"주말 여행러","🎒"],[6,"프로 방랑자","🧭"],[11,"국토 순례자","🚩"],[17,"전국 정복","👑"]];
+const SAMPLE_STAMPS={seoul:{photo:null,text:"한강에서 돗자리 펴고 치맥",with:"친구",date:"2026.10.03"},gangwon:{photo:null,text:"속초 바다 보면서 물회 먹음",with:"가족",date:"2026.08.15"}};
+if(!S.stamps) S.stamps=JSON.parse(JSON.stringify(SAMPLE_STAMPS));
+function titleOf(n){ let cur=TITLES[0],next=TITLES[1]; TITLES.forEach((t,i)=>{ if(n>=t[0]){cur=t;next=TITLES[i+1]||null;} }); return {cur,next}; }
+function viewBoard(){
+  const n=Object.keys(S.stamps).length, {cur,next}=titleOf(n);
+  const left=REGIONS.find(r=>!S.stamps[r[0]]);
+  const tiles=REGIONS.map(([id,name,em,r,c])=>{
+    const st=S.stamps[id], pos=`grid-row:${r+1};grid-column:${c+1}`;
+    if(!st) return `<button class="tile" data-rg="${id}" style="${pos}"><span class="te">${em}</span>${name}</button>`;
+    const bg=st.photo?`background-image:linear-gradient(rgba(0,0,0,.25),rgba(0,0,0,.25)),url(${st.photo})`:"";
+    return `<button class="tile done" data-rg="${id}" style="${pos}"><div class="stamp ${st.photo?"photo":""} ${S.newStamp===id?"new":""}" style="${bg}">
+      ${st.photo?"":`<span style="font-size:17px">${em}</span>`}<b>${name}</b><small>${st.date.slice(5)}</small></div></button>`;
+  }).join("");
+  return `
+    <button class="back" id="bback">← 레시피 목록</button>
+    <div class="room">
+      <small>🗺️ 여행 도장깨기</small><h3>${cur[2]} ${cur[1]}</h3>
+      <div class="row" style="color:#CFC6B6;margin:8px 0 6px"><span>전국 17곳 중 <b style="color:#fff">${n}곳</b> 정복</span><span>${Math.round(n/17*100)}%</span></div>
+      <div class="pbar"><i style="width:${n/17*100}%"></i></div>
+      ${next?`<p style="font-size:12px;color:#CFC6B6;margin-top:8px">${next[0]-n}곳 더 가면 '${next[2]} ${next[1]}' 칭호를 받아요</p>`:""}
+    </div>
+    ${window.KMAP&&window.KMAP.locations ? mapBlock() : `<div class="board">${tiles}</div>`}
+    ${left?`<button class="goal2" data-rg="${left[0]}">📌 아직 빈 조각인 <b>${left[1]} ${left[2]}</b>, 다음 여행지로 어때요?</button>`:`<div class="goal2">👑 전국 정복 완료!</div>`}
+    <p class="note">지도 조각을 눌러 도장을 찍어 보세요 · 작은 도시는 아래 버튼으로 눌러도 돼요</p>`;
+}
+function matchRegion(loc){
+  const s=((loc.id||"")+" "+(loc.name||"")).toLowerCase(), has=k=>s.includes(k);
+  for(const m of ["seoul","busan","daegu","incheon","gwangju","daejeon","ulsan","sejong","jeju","gangwon"]) if(has(m)) return m;
+  const north=has("north")||has("buk");
+  if(has("chung")) return north?"chungbuk":"chungnam";
+  if(has("jeolla")||has("jeon")) return north?"jeonbuk":"jeonnam";
+  if(has("gyeongsang")||has("gyeongbuk")||has("gyeongnam")) return north?"gyeongbuk":"gyeongnam";
+  if(has("gyeonggi")) return "gyeonggi";
+  return null;
+}
+function mapBlock(){
+  const M=window.KMAP; let defs="", paths="";
+  M.locations.forEach(loc=>{
+    const id=matchRegion(loc); if(!id) return;
+    const R=REGIONS.find(r=>r[0]===id), st=S.stamps[id]; let fill="#EDE5D6";
+    if(st&&st.photo){ defs+=`<pattern id="p-${id}" patternContentUnits="objectBoundingBox" width="1" height="1"><image href="${st.photo}" width="1" height="1" preserveAspectRatio="xMidYMid slice"/></pattern>`; fill=`url(#p-${id})`; }
+    else if(st) fill="#F4A58C";
+    paths+=`<path class="pc ${st?"got":""} ${S.newStamp===id?"new":""}" data-rg="${id}" d="${loc.path}" fill="${fill}"><title>${R[1]}</title></path>`;
+  });
+  const chips=REGIONS.map(([id,name,em])=>{const st=S.stamps[id];return `<button class="chip ${st?"on":""}" data-rg="${id}">${st?em+" ":""}${name}${st?" ✓":""}</button>`}).join("");
+  return `<div class="mapbox"><svg class="kmap" viewBox="${M.viewBox}" role="img" aria-label="대한민국 시도 지도"><defs>${defs}</defs><g>${paths}</g><g id="labels" style="pointer-events:none"></g></svg></div>
+    <div class="chips" style="margin-top:10px">${chips}</div>`;
+}
+function drawLabels(){
+  const svg=document.querySelector(".kmap"); if(!svg) return;
+  const vb=svg.viewBox.baseVal, fs=vb.width*0.034; let out="";
+  svg.querySelectorAll(".pc").forEach(p=>{
+    let b; try{ b=p.getBBox(); }catch(e){ return; }
+    const id=p.dataset.rg, R=REGIONS.find(r=>r[0]===id), st=S.stamps[id];
+    const big=b.width>vb.width*0.09, dy={gyeonggi:.3,jeonnam:.12,gyeongbuk:.05}[id]||0;
+    const cx=b.x+b.width/2, cy=b.y+b.height*(.5+dy);
+    if(st&&!st.photo&&big) out+=`<text x="${cx}" y="${cy-fs*.7}" font-size="${fs*1.4}" text-anchor="middle" dominant-baseline="central">${R[2]}</text>`;
+    if(big) out+=`<text class="lb ${st?"on":""}" x="${cx}" y="${cy+(st&&!st.photo?fs*.7:0)}" font-size="${fs}" stroke-width="${fs*.22}" text-anchor="middle" dominant-baseline="central">${R[1]}</text>`;
+  });
+  svg.querySelector("#labels").innerHTML=out;
+}
+window.addEventListener("kmap",()=>{ if(S.tab==="recipes"&&S.board) render(true); });
+function renderSheet(){
+  const box=$("#sheet");
+  if(!S.sheet){ box.innerHTML=""; return; }
+  const [id,name,em]=REGIONS.find(r=>r[0]===S.sheet), st=S.stamps[id], d=S.draft;
+  box.innerHTML=`<div class="sheet-bg" id="sbg"><div class="sheet">${st?`
+    <span class="qlabel">${em} ${name} 도장</span>
+    <div class="qtext" style="font-size:22px">${esc(st.text||name+" 여행")}</div>
+    ${st.photo?`<img class="big" src="${st.photo}" alt="${name} 여행 사진">`:""}
+    <p class="qhint">${st.date} · ${st.with==="혼자"?"혼자 떠난 여행":esc(st.with)+"랑"}</p>
+    <div class="two"><button class="btn ghost" id="sclose">닫기</button><button class="btn" id="sbrag">👯 교환일기에 자랑하기</button></div>`
+  :`
+    <span class="qlabel">📍 ${name} 도장 찍기</span>
+    <div class="qtext" style="font-size:22px">${name}에서 어땠어요?</div>
+    <label class="photo-pick" style="height:150px">${d.photo?`<img src="${d.photo}" alt="고른 사진">`:`<span style="font-size:30px">📷</span>사진 한 장 (없어도 돼요)`}<input type="file" id="sp" accept="image/*" hidden></label>
+    <input id="stxt" class="inp" style="margin-top:10px" maxlength="50" placeholder="한 줄 기록 예) 바다 보면서 먹은 물회 최고" value="${esc(d.text)}">
+    <div class="chips" style="margin-top:10px">${["혼자","친구","가족","연인"].map(w=>`<button class="chip ${d.with===w?"on":""}" data-with="${w}">${w}</button>`).join("")}</div>
+    <div class="two"><button class="btn ghost" id="sclose">닫기</button><button class="btn" id="sgo" ${d.photo||d.text.trim()?"":"disabled"}>쾅! 도장 찍기</button></div>`}
+  </div></div>`;
+  const close=()=>{ S.sheet=null; renderSheet(); };
+  $("#sbg").onclick=e=>{ if(e.target.id==="sbg") close(); };
+  $("#sclose").onclick=close;
+  const brag=$("#sbrag"); if(brag) brag.onclick=()=>{ close(); toast("고딩 4인방 교환일기에 올렸어요 👯"); };
+  const tx=$("#stxt");
+  if(tx){
+    tx.oninput=()=>{ d.text=tx.value; $("#sgo").disabled=!(d.photo||d.text.trim()); };
+    document.querySelectorAll("[data-with]").forEach(b=>b.onclick=()=>{ d.with=b.dataset.with; document.querySelectorAll("[data-with]").forEach(x=>x.classList.toggle("on",x===b)); });
+    $("#sp").onchange=e=>{ const file=e.target.files[0]; if(!file) return; const img=new Image();
+      img.onload=()=>{ const c=document.createElement("canvas"); const r=Math.min(1,500/img.width); c.width=img.width*r; c.height=img.height*r;
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height); d.photo=c.toDataURL("image/jpeg",.7); renderSheet(); };
+      img.src=URL.createObjectURL(file); };
+    $("#sgo").onclick=()=>{
+      const before=titleOf(Object.keys(S.stamps).length).cur;
+      const date=`${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,"0")}.${String(today.getDate()).padStart(2,"0")}`;
+      S.stamps[id]={photo:d.photo,text:d.text.trim(),with:d.with,date};
+      addEntry("여행 도장깨기","🗺️",[["지역",`${em} ${name}`],...(d.photo?[["사진",d.photo]]:[]),["한 줄",d.text.trim()||"(사진으로 대신)"],["누구랑",d.with]]);
+      S.newStamp=id; S.sheet=null; renderSheet(); render(true); S.newStamp=null;
+      toast(`쾅! ${em} ${name} 도장 획득`);
+      const after=titleOf(Object.keys(S.stamps).length).cur;
+      if(after!==before) setTimeout(()=>toast(`🎉 새 칭호: ${after[2]} ${after[1]}`),1900);
+    };
+  }
+}
+function openSheet(id){ S.sheet=id; S.draft={photo:null,text:"",with:"친구"}; renderSheet(); }
+
+function viewRecipes(){
+  if(S.board) return viewBoard();
+  if(S.w) return viewWrite();
+  if(S.fmt) return viewDetail();
+  const list = FORMATS.filter(f=>S.cat==="전체"||f.cat===S.cat);
+  return `
+    <div class="hero"><h3>뭘 써야 할지 모르겠다면<br>레시피대로 따라 써 보세요</h3><p>질문에 답하다 보면 기록이 완성돼요</p></div>
+    <div class="cats">${CATS.map(c=>`<button class="chip ${S.cat===c?"on":""}" data-cat="${c}">${c}</button>`).join("")}</div>
+    <div class="fgrid">${list.map(f=>`
+      <button class="fcard" data-fmt="${f.id}">${f.badge?`<span class="nb">${f.badge}</span>`:""}<span class="em">${f.em}</span><span class="nm">${f.name}</span>
+      <span class="ds">${f.desc.split(".")[0]}.</span><span class="time">⏱ ${f.time}</span></button>`).join("")}</div>`;
+}
+function viewDetail(){
+  const f=fmtById(S.fmt);
+  return `
+    <button class="back" id="back">← 레시피 목록</button>
+    <div class="dhead"><span class="em">${f.em}</span><div><h2>${f.name}</h2><span class="time">⏱ ${f.time}</span></div></div>
+    <p class="dbody">${f.desc}</p>
+    <p class="dbody" style="margin-top:8px"><b>이런 사람에게 좋아요</b> · ${f.who}</p>
+    <div class="steps"><b style="font-size:13px">재료(질문) ${f.steps.length}개</b><ol>${f.steps.map(s=>`<li>${s[0]}</li>`).join("")}</ol></div>
+    <p class="sec">다른 사람들은 이렇게 썼어요</p>
+    ${f.ex.map((e,i)=>`<div class="ex"><div class="who">${NICK[(i+2)%NICK.length]}</div>${e.map((a,j)=>`<div><span class="q">${f.steps[j][0]}</span><br>${esc(a)}</div>`).join('<div style="height:6px"></div>')}</div>`).join("")}
+    <button class="btn" data-start="${f.id}">나도 써 보기</button>
+    ${f.cat==="친구랑"?`<button class="btn ghost" id="goroom">👯 교환일기 방에서 친구들이랑 쓰기</button>`:""}`;
+}
+function viewWrite(){
+  const f=fmtById(S.w.id), i=S.w.step, s=f.steps[i];
+  return `
+    <button class="back" id="quit">✕ 그만 쓰기</button>
+    <div class="prog">${f.steps.map((_,k)=>`<i class="${k<=i?"on":""}"></i>`).join("")}</div>
+    <p class="wstep">${f.em} ${f.name} · ${i+1}/${f.steps.length}</p>
+    <div class="wq pop">${s[0]}</div>
+    ${s[2]==="photo"
+      ? `<label class="photo-pick">${S.w.ans[i]?`<img src="${S.w.ans[i]}" alt="고른 사진">`:`<span style="font-size:34px">📷</span>눌러서 사진 고르기`}<input type="file" id="ph" accept="image/*" hidden></label>`
+      : `<textarea id="wa" class="inp" rows="3" maxlength="100" placeholder="${esc(s[1])}">${esc(S.w.ans[i]||"")}</textarea>`}
+    <div class="row"><span>짧아도 괜찮아요</span><span></span></div>
+    <div class="two">
+      ${i>0?`<button class="btn ghost" id="prev">이전</button>`:""}
+      <button class="btn ${i===f.steps.length-1?"":"dark"}" id="next" ${S.w.ans[i]?"":"disabled"}>${i===f.steps.length-1?"기록 완성 🎉":"다음"}</button>
+    </div>`;
+}
+function bindRecipes(){
+  document.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat;render();});
+  document.querySelectorAll("[data-fmt]").forEach(b=>b.onclick=()=>{ if(b.dataset.fmt==="stamp"){S.board=true;S.fmt=null;} else S.fmt=b.dataset.fmt; render(); });
+  const bb=$("#bback"); if(bb) bb.onclick=()=>{S.board=false;render();};
+  document.querySelectorAll("[data-rg]").forEach(b=>b.onclick=()=>openSheet(b.dataset.rg));
+  drawLabels();
+  const bk=$("#back"); if(bk) bk.onclick=()=>{S.fmt=null;render();};
+  const q=$("#quit"); if(q) q.onclick=()=>{S.w=null;render();};
+  const gr=$("#goroom"); if(gr) gr.onclick=()=>{S.tab="room";S.fmt=null;render();};
+  if(S.w){
+    const f=fmtById(S.w.id);
+    const wa=$("#wa");
+    if(wa){ wa.focus(); wa.oninput=()=>{ S.w.ans[S.w.step]=wa.value; $("#next").disabled=!wa.value.trim(); }; }
+    const ph=$("#ph");
+    if(ph) ph.onchange=()=>{
+      const file=ph.files[0]; if(!file) return;
+      const img=new Image();
+      img.onload=()=>{ const c=document.createElement("canvas"); const r=Math.min(1,600/img.width);
+        c.width=img.width*r; c.height=img.height*r; c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        S.w.ans[S.w.step]=c.toDataURL("image/jpeg",.7); render(); };
+      img.src=URL.createObjectURL(file);
+    };
+    const p=$("#prev"); if(p) p.onclick=()=>{S.w.step--;render();};
+    $("#next").onclick=()=>{
+      if(S.w.step<f.steps.length-1){ S.w.step++; render(); return; }
+      addEntry(f.name,f.em,f.steps.map((s,k)=>[s[0],S.w.ans[k].trim()]));
+      S.w=null; S.fmt=null; S.tab="me"; render(); toast(`${f.em} ${f.name} 완성! 내 기록에 담았어요`);
+    };
+  }
+}
+
+/* ---------- 내 기록 ---------- */
+function viewMe(){
+  const days=new Set(S.entries.map(e=>e.date));
+  const mon=new Date(today); mon.setDate(today.getDate()-((today.getDay()+6)%7));
+  const names=["월","화","수","목","금","토","일"];
+  const week=names.map((n,k)=>{const d=new Date(mon);d.setDate(mon.getDate()+k);const on=days.has(key(d));const t=key(d)===key(today);
+    return `<div class="day"><div class="dot ${on?"on":""} ${t?"today":""}">${on?"✓":""}</div>${n}</div>`}).join("");
+  const used=new Set(S.entries.map(e=>e.type)).size;
+  return `
+    <div class="week">${week}</div>
+    <div class="stats">
+      <div class="stat"><b>${S.entries.length}</b><span>쌓인 기록</span></div>
+      <div class="stat"><b>🔥 ${streak()}</b><span>연속 기록일</span></div>
+      <div class="stat"><b>${used}</b><span>써 본 레시피</span></div>
+    </div>
+    <p class="sec">내 기록함</p>
+    ${S.entries.length? S.entries.map(e=>`
+      <div class="entry"><div class="eh"><b>${e.em} ${esc(e.type)}</b><span>${e.label}</span></div>
+      ${e.lines.map(l=>`<div class="l"><small>${esc(l[0])}</small>${String(l[1]).startsWith("data:image")?`<img src="${l[1]}" alt="">`:esc(l[1])}</div>`).join("")}</div>`).join("")
+    : `<div class="empty"><div class="big">🗒️</div>아직 기록이 없어요.<br>오늘의 질문에 한 줄만 써 볼까요?<button class="btn" id="go">한 줄 쓰러 가기</button></div>`}`;
+}
+function bindMe(){ const g=$("#go"); if(g) g.onclick=()=>{S.tab="today";render();}; }
+
+/* ---------- 교환일기 ---------- */
+const FR=[{n:"민지",av:"🐻",c:"#F6D7A7"},{n:"수아",av:"🐰",c:"#F7C8D0"},{n:"하은",av:"🦊",c:"#CFE3C8"}];
+const ME={n:"나",av:"🐥",c:"#FBE7A1"};
+const EMO=["😂","👍","🥲","❤️"];
+const ROOM_Q={q:"요즘 제일 빠져 있는 거 하나만!",by:1};
+const HAEUN={f:2,t:"필라테스 시작했어… 근데 아직 계단 내려갈 때 다리 후들거림 🥲",time:"방금",r:{},c:[]};
+const RELAY=[[0,"오늘 아침 엘리베이터에서 옆집 강아지를 만났는데,"],[1,"그 강아지가 갑자기 내 가방을 물고 1층으로 뛰어가는 거야. 그래서 나는"]];
+const LASTWEEK=[["월","주말에 제일 잘한 일?",1,"약속 하나도 안 잡고 하루 종일 잔 것",6],["화","요즘 듣는 노래 한 곡",0,"출근길에 같은 노래 30번 반복 중",4],["수","밸런스 게임: 평생 라면 vs 평생 치킨",2,"라면. 치킨은 질릴 것 같아",7],["목","최근에 제일 웃겼던 일",-1,"지하철에서 졸다가 옆 사람 어깨에 기댐…",9],["금","이번 주 나에게 점수",1,"75점. 금요일이라 +10점",5],["토","주말에 뭐 해?",0,"수아랑 성수 팝업!",3],["일","다음 주 기대되는 거 하나",2,"월요일 필라테스 첫 수업",4]];
+let R={sub:"today",posted:false,mine:"",haeun:false,poked:false,my:{},relay:"",relayDone:false,nextQ:"",qDone:false,
+  posts:[{f:0,t:"넷플릭스 요리 예능 정주행 중. 자기 전에 한 화만 보려다 새벽 2시 됨 🍳",time:"오전 8:12",r:{"😂":1,"👍":2},c:[["수아","ㅋㅋㅋ 그거 나도 보는 중"]]},
+         {f:1,t:"성수 팝업 투어! 이번 주말에 또 갈 건데 같이 갈 사람?",time:"오전 9:40",r:{"❤️":2},c:[["민지","나 토요일 됨!!"]]}]};
+const av=p=>`<div class="av" style="background:${p.c}">${p.av}</div>`;
+
+function viewRoom(){
+  const done=[R.posted,true,true,R.haeun];
+  const people=[ME,...FR];
+  return `
+    <div class="room">
+      <div class="rt"><div><small>교환일기 · 멤버 4명</small><h3>📒 고딩 4인방</h3></div><button class="inv" id="invite">+ 친구 초대</button></div>
+      <div class="members">${people.map((p,i)=>`<div class="mem">${av(p)}${done[i]?'<span class="ck">✓</span>':""}${p.n}</div>`).join("")}
+        <div class="mem" style="margin-left:auto;color:#fff;font-size:12px;padding-bottom:2px">🔥 우리 방 연속 12일째</div></div>
+    </div>
+    <div class="subs">${[["today","오늘"],["relay","릴레이 노트"],["week","지난주 일기장"]].map(([k,t])=>`<button data-sub="${k}" class="${R.sub===k?"on":""}">${t}</button>`).join("")}</div>
+    ${R.sub==="today"?roomToday():R.sub==="relay"?roomRelay():roomWeek()}`;
+}
+function postCard(p,i){
+  const f=FR[p.f];
+  return `<div class="post ${p.f===2&&p.time==="방금"?"pop":""}"><div class="ph">${av(f)}${f.n} <span>${p.time}</span></div><div class="ptxt">${esc(p.t)}</div>
+    <div class="reacts">${EMO.map(e=>{const on=R.my[i+"-"+e];const n=(p.r[e]||0)+(on?1:0);return `<button class="rb ${on?"on":""}" data-re="${i}|${e}">${e}${n?" "+n:""}</button>`}).join("")}</div>
+    <div class="cmts">${p.c.map(c=>`<div class="cmt"><b>${esc(c[0])}</b>${esc(c[1])}</div>`).join("")}
+      <div class="cin"><input data-ci="${i}" placeholder="댓글 달기" maxlength="60"><button data-cb="${i}">등록</button></div></div></div>`;
+}
+function roomToday(){
+  const by=FR[ROOM_Q.by];
+  const q=`<div class="qcard" style="margin-bottom:12px"><span class="qlabel">${by.av} ${by.n}가 낸 오늘의 질문</span><div class="qtext" style="font-size:22px">${ROOM_Q.q}</div>`;
+  if(!R.posted) return q+`
+      <textarea id="rans" class="inp" rows="2" maxlength="80" placeholder="이 방 친구들한테만 보여요"></textarea>
+      <button class="btn" id="rpost" disabled>쓰고 친구들 답 열기</button></div>
+    <div class="locked"><div class="blur">${R.posts.map(p=>`<div class="post"><div class="ptxt">${esc(p.t)}</div></div>`).join("")}</div>
+      <div class="lockmsg">🔒 민지, 수아는 벌써 썼어요<span>나도 써야 친구들 답이 열려요</span></div></div>`;
+  return q+`</div>
+    <div class="post mine"><div class="ph">${av(ME)}나 <span>방금</span></div><div class="ptxt">${esc(R.mine)}</div>
+      <div class="reacts"><span class="rb on">😂 민지</span>${R.haeun?'<span class="rb on">❤️ 하은</span>':""}</div></div>
+    ${R.posts.map(postCard).join("")}
+    ${R.haeun?"":`<div class="wait"><div class="ph" style="margin:0">${av(FR[2])}하은 <span>아직 안 썼어요</span></div>
+      <button class="poke" id="poke" ${R.poked?"disabled":""}>${R.poked?"콕! 보냄 · 기다리는 중":"👉 콕 찌르기"}</button></div>`}
+    <div class="cta"><small>교환일기는 돌아가며 질문을 내요</small>
+      ${R.qDone?`<h4>✅ 내일 질문 등록 완료!<br>"${esc(R.nextQ)}"</h4>`
+      :`<h4>내일 질문은 내가 낼래요</h4><input id="nq" class="inp" style="margin-bottom:10px;background:#fff" placeholder="예) 요즘 제일 듣고 싶은 말은?" maxlength="40"><button class="btn" id="nqb">질문 내기</button>`}</div>`;
+}
+function roomRelay(){
+  const lines=RELAY.map(([f,t])=>`<div><span class="by">${FR[f].av} ${FR[f].n}</span>${esc(t)}</div>`).join("")
+    +(R.relayDone?`<div class="pop"><span class="by">${ME.av} 나</span>${esc(R.relay)}</div>`:"");
+  return `<div class="hero"><h3>노트를 돌려 쓰던<br>그 교환일기처럼</h3><p>한 명씩 이어 쓰고 다음 사람에게 바통을 넘겨요</p></div>
+    <div class="nbook">${lines}</div>
+    ${R.relayDone
+      ?`<div class="wait" style="margin-top:12px"><div class="ph" style="margin:0">${av(FR[2])}하은 <span>바통 받음 · 하은 차례</span></div><span style="font-size:20px">⏳</span></div><p class="note">하은이 이어 쓰면 알려 드릴게요</p>`
+      :`<p class="sec">✏️ 지금은 나의 차례!</p><textarea id="rl" class="inp" rows="3" maxlength="100" placeholder="앞 문장에 이어서 써 보세요"></textarea><button class="btn" id="rlb" disabled>쓰고 바통 넘기기 → 🦊 하은</button>`}`;
+}
+function roomWeek(){
+  return `<p class="date">지난주 우리 일기장 · 날마다 반응이 제일 많았던 답</p>
+    ${LASTWEEK.map(([d,q,f,a,n])=>{const p=f<0?ME:FR[f];return `<div class="wk"><span class="d">${d}</span><div style="flex:1">
+      <div class="q2">${q}</div><div class="a2">${esc(a)}</div><div class="m2">${p.av} ${p.n} · ❤️ ${n} · 4명 모두 씀</div></div></div>`}).join("")}`;
+}
+function bindRoom(){
+  document.querySelectorAll("[data-sub]").forEach(b=>b.onclick=()=>{R.sub=b.dataset.sub;render();});
+  $("#invite").onclick=async()=>{ try{ await navigator.clipboard.writeText("https://record-recipe.app/join/4inbang"); }catch(e){} toast("초대 링크를 복사했어요 · 카톡에 붙여 넣으세요"); };
+  const ra=$("#rans");
+  if(ra){ ra.oninput=()=>{$("#rpost").disabled=!ra.value.trim();};
+    $("#rpost").onclick=()=>{ R.mine=ra.value.trim(); R.posted=true; addEntry("교환일기 · 고딩 4인방","👯",[[ROOM_Q.q,R.mine]]); render(); toast("🔓 친구들 답이 열렸어요!"); }; }
+  document.querySelectorAll("[data-re]").forEach(b=>b.onclick=()=>{ const [i,e]=b.dataset.re.split("|"); const k=i+"-"+e; R.my[k]=!R.my[k]; render(true); });
+  const addC=i=>{ const inp=document.querySelector(`[data-ci="${i}"]`); const v=inp.value.trim(); if(!v) return; R.posts[i].c.push(["나",v]); render(true); };
+  document.querySelectorAll("[data-cb]").forEach(b=>b.onclick=()=>addC(b.dataset.cb));
+  document.querySelectorAll("[data-ci]").forEach(inp=>inp.onkeydown=e=>{ if(e.key==="Enter"&&!e.isComposing) addC(inp.dataset.ci); });
+  const pk=$("#poke");
+  if(pk) pk.onclick=()=>{ R.poked=true; render(true); toast("🦊 하은에게 콕! 알림을 보냈어요");
+    setTimeout(()=>{ R.haeun=true; R.posts.push(HAEUN); if(S.tab==="room"&&R.sub==="today") render(true); toast("🦊 하은이 방금 썼어요!"); },3000); };
+  const nb=$("#nqb");
+  if(nb) nb.onclick=()=>{ const v=$("#nq").value.trim(); if(!v){ toast("질문을 적어 주세요"); return; } R.nextQ=v; R.qDone=true; render(true); toast("내일 아침 친구들에게 질문이 도착해요"); };
+  const rl=$("#rl");
+  if(rl){ rl.oninput=()=>{$("#rlb").disabled=!rl.value.trim();};
+    $("#rlb").onclick=()=>{ R.relay=rl.value.trim(); R.relayDone=true; addEntry("릴레이 노트 · 고딩 4인방","🔗",[["이어 쓴 문장",R.relay]]); render(); toast("바통을 하은에게 넘겼어요 🦊"); }; }
+}
+
+/* ---------- 공통 ---------- */
+function render(keep){
+  const v=$("#view"); const y=v.scrollTop;
+  v.innerHTML = S.tab==="today"?viewToday(): S.tab==="recipes"?viewRecipes(): S.tab==="room"?viewRoom(): viewMe();
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===S.tab));
+  $("#streak").textContent=`🔥 ${streak()}일`;
+  document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>{ S.tab="recipes"; S.fmt=b.dataset.start; S.w={id:b.dataset.start,step:0,ans:[]}; render(); });
+  if(S.tab==="today") bindToday(); else if(S.tab==="recipes") bindRecipes(); else if(S.tab==="room") bindRoom(); else bindMe();
+  v.scrollTop = keep ? y : 0;
+}
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{ S.tab=b.dataset.tab; if(S.tab==="recipes"){S.fmt=null;S.w=null;S.board=false;} S.sheet=null; renderSheet(); render(); });
+render();
+</script>
+<script type="module">
+  try{ const m = await import("https://cdn.jsdelivr.net/npm/@svg-maps/south-korea@2.0.0/+esm"); window.KMAP = m.default || m; }
+  catch(e){ window.KMAP_FAIL = true; }
+  window.dispatchEvent(new Event("kmap"));
+</script>
+</body>
+</html>
