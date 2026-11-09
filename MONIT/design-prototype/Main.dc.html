@@ -15,32 +15,31 @@ body{margin:0;font-family:'Noto Sans KR',system-ui,sans-serif}
 button{font-family:inherit;cursor:pointer;border:0;background:none;padding:0;color:inherit}
 input{font-family:inherit}
 .pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center}
-.pin .th{position:relative;border:3px solid #fff;box-shadow:0 4px 12px rgba(31,26,81,.4);box-sizing:border-box}
+.pin .th{position:relative;border:3px solid #fff;box-shadow:0 4px 12px rgba(23,23,25,.28);box-sizing:border-box}
 .pin .tip{width:0;height:0;border:7px solid transparent;border-top:8px solid #fff;border-bottom:0;margin-top:-1px}
 </style>
 </helmet>
 
-<div style="position:relative;width:390px;height:844px;overflow:hidden;background:#fff;color:#171719;font-size:15px;line-height:1.45">
+<div style="position:relative;width:390px;height:844px;overflow:hidden;background:#fff;color:#171719;font-size:16px;line-height:1.5">
 
 <!-- ═════ 홈 ═════ -->
 <sc-if value="{{showHome}}" hint-placeholder-val="{{true}}">
 <div style="position:absolute;left:0;top:0;width:390px;height:780px;overflow:auto;padding:0 16px 24px;box-sizing:border-box">
-  <div style="padding:20px 0 4px;font-weight:800;letter-spacing:.04em;color:#6155F5;font-size:18px">MONIT</div>
+  <div style="padding:20px 0 4px;font-weight:700;letter-spacing:.04em;color:#6155F5;font-size:18px">MONIT</div>
   <div style="position:relative;overflow:hidden;background:#6155F5;color:#fff;border-radius:20px;padding:20px;margin-top:12px">
     <div style="position:absolute;right:-18px;top:-18px;width:88px;height:88px;border-radius:44px;background:#B9F36B"></div>
     <div style="position:absolute;right:50px;top:30px;width:34px;height:34px;border-radius:17px;background:#F56F98"></div>
-    <div style="font-size:14px;opacity:.9">약속이 끝나면, 우리의 추억이 시작돼요</div>
-    <div style="font-size:24px;line-height:1.3;font-weight:700;letter-spacing:-.02em;margin:4px 0 14px">{{statRegions}}개 지역 · {{statPlaces}}곳<br>사진 {{statPhotos}}장이 쌓였어요</div>
-    <button type="button" onClick="{{openNew}}" style="width:100%;height:44px;border-radius:12px;background:#fff;color:#3C319F;font-weight:700;font-size:16px">+ 새 약속 만들기</button>
+    <div style="font-size:14px;opacity:.9;max-width:240px">약속이 끝나면, 우리의 추억이 시작돼요</div>
+    <div style="font-size:26px;line-height:1.3;font-weight:700;letter-spacing:-.02em;margin:4px 0 16px">{{statRegions}}개 지역 · {{statPlaces}}곳<br>사진 {{statPhotos}}장이 쌓였어요</div>
+    <button type="button" onClick="{{openNew}}" style="width:100%;height:48px;border-radius:12px;background:#fff;color:#3C319F;font-weight:700;font-size:16px">+ 새 약속 만들기</button>
   </div>
 
   <sc-if value="{{hasUpcoming}}" hint-placeholder-val="{{true}}">
   <div style="font-size:18px;font-weight:700;margin:28px 0 12px">다가오는 약속</div>
   <sc-for list="{{upcoming}}" as="c" hint-placeholder-count="1">
-    <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
-      <div style="width:64px;height:64px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
-      <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div>
-      <span style="display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}}">{{c.stLabel}}</span></div>
+    <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:12px;box-sizing:border-box">
+      <div style="width:64px;height:64px;border-radius:8px;flex:none;background:{{c.bg}}"></div>
+      <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><span style="font-size:12px;color:#55565a">{{c.sub}}</span><span style="display:inline-block;padding:0 8px;border-radius:8px;line-height:20px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}};box-shadow:inset 0 0 0 1px {{c.stBd}}">{{c.stLabel}}</span></div></div>
     </button>
   </sc-for>
   </sc-if>
@@ -48,19 +47,18 @@ input{font-family:inherit}
   <sc-if value="{{hasWaiting}}" hint-placeholder-val="{{true}}">
   <div style="font-size:18px;font-weight:700;margin:28px 0 12px">사진을 기다리는 약속</div>
   <sc-for list="{{waiting}}" as="c" hint-placeholder-count="1">
-    <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
-      <div style="width:64px;height:64px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
-      <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div>
-      <span style="display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}}">{{c.stLabel}}</span></div>
+    <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:12px;box-sizing:border-box">
+      <div style="width:64px;height:64px;border-radius:8px;flex:none;background:{{c.bg}}"></div>
+      <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><span style="font-size:12px;color:#55565a">{{c.sub}}</span><span style="display:inline-block;padding:0 8px;border-radius:8px;line-height:20px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}};box-shadow:inset 0 0 0 1px {{c.stBd}}">{{c.stLabel}}</span></div></div>
     </button>
   </sc-for>
   </sc-if>
 
   <div style="display:flex;justify-content:space-between;align-items:baseline;margin:28px 0 12px"><span style="font-size:18px;font-weight:700">최근 추억</span><button type="button" onClick="{{goArchive}}" style="font-size:12px;color:#55565a">전체 보기</button></div>
-  <div style="display:flex;gap:10px;overflow:auto;margin:0 -16px;padding:0 16px 4px">
+  <div style="display:flex;gap:12px;overflow:auto;margin:0 -16px;padding:0 16px 4px">
     <sc-for list="{{recent}}" as="c" hint-placeholder-count="3">
-      <button type="button" onClick="{{c.onOpen}}" style="flex:none;width:150px;text-align:left">
-        <div style="width:150px;height:150px;border-radius:16px;background:{{c.bg}};margin-bottom:6px"></div>
+      <button type="button" onClick="{{c.onOpen}}" style="flex:none;width:152px;text-align:left">
+        <div style="width:152px;height:152px;border-radius:16px;background:{{c.bg}};margin-bottom:8px"></div>
         <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{c.title}}</div>
         <div style="font-size:12px;color:#55565a">{{c.date}}</div>
       </button>
@@ -84,25 +82,30 @@ input{font-family:inherit}
     <button type="button" class="pin" aria-label="{{p.aria}}" onClick="{{p.onTap}}" style="left:{{p.left}}px;top:{{p.top}}px;transition:left .45s ease,top .45s ease">
       <div class="th" style="width:{{p.sz}}px;height:{{p.sz}}px;border-radius:16px;background:{{p.bg}}">
         <sc-if value="{{p.hasBadge}}" hint-placeholder-val="{{true}}">
-          <span style="position:absolute;top:-10px;right:-10px;min-width:22px;height:22px;padding:0 5px;box-sizing:border-box;border-radius:11px;background:{{p.badgeBg}};color:{{p.badgeFg}};font-size:12px;font-weight:700;line-height:18px;text-align:center;border:2px solid #fff">{{p.badge}}</span>
+          <span style="position:absolute;top:-8px;right:-8px;min-width:24px;height:24px;padding:0 4px;box-sizing:border-box;border-radius:12px;background:{{p.badgeBg}};color:{{p.badgeFg}};font-size:12px;font-weight:700;line-height:20px;text-align:center;border:2px solid #fff">{{p.badge}}</span>
         </sc-if>
       </div>
       <div class="tip"></div>
       <sc-if value="{{p.hasLabel}}" hint-placeholder-val="{{true}}">
-        <span style="margin-top:3px;white-space:nowrap;font-size:12px;font-weight:700;padding:1px 8px;border-radius:8px;background:#fff;color:#1F1A51;box-shadow:0 1px 4px rgba(0,0,0,.2)">{{p.label}}</span>
+        <span style="margin-top:4px;white-space:nowrap;font-size:12px;font-weight:700;line-height:20px;padding:0 8px;border-radius:8px;background:#fff;color:#1F1A51;box-shadow:0 1px 4px rgba(0,0,0,.2)">{{p.label}}</span>
       </sc-if>
     </button>
   </sc-for>
 
   <div style="position:absolute;left:0;top:0;width:390px;padding:12px 16px;box-sizing:border-box;display:flex;gap:8px;overflow:auto;background:linear-gradient(#EDEAFF,rgba(237,234,255,0))">
     <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
-      <button type="button" onClick="{{f.onTap}}" style="flex:none;height:34px;padding:0 14px;border-radius:17px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(23,23,25,.12);background:{{f.bg}};color:{{f.fg}}">{{f.label}}</button>
+      <button type="button" onClick="{{f.onTap}}" style="flex:none;height:32px;padding:0 16px;border-radius:16px;font-size:14px;font-weight:600;box-shadow:0 2px 8px rgba(23,23,25,.12);background:{{f.bg}};color:{{f.fg}}">{{f.label}}</button>
     </sc-for>
   </div>
 
   <sc-if value="{{inRegion}}" hint-placeholder-val="{{false}}">
-  <button type="button" onClick="{{backNation}}" style="position:absolute;left:16px;top:58px;height:36px;padding:0 14px;border-radius:18px;background:#fff;box-shadow:0 2px 8px rgba(23,23,25,.12);font-size:13px;font-weight:700;color:#4D40C7">‹ 전국 · {{regionName}}</button>
+  <button type="button" onClick="{{backNation}}" style="position:absolute;left:16px;top:58px;height:36px;padding:0 16px;border-radius:18px;background:#fff;box-shadow:0 2px 8px rgba(23,23,25,.12);font-size:14px;font-weight:700;color:#4D40C7">‹ 전국 · {{regionName}}</button>
   </sc-if>
+
+  <div style="position:absolute;left:16px;bottom:80px;background:#fff;box-shadow:0 2px 12px rgba(23,23,25,.12);border-radius:12px;padding:8px 12px;font-size:12px;color:#55565a;display:flex;flex-direction:column;gap:4px">
+    <span><i style="display:inline-block;width:12px;height:12px;border-radius:6px;margin-right:8px;background:#6155F5"></i>방문 횟수</span>
+    <span><i style="display:inline-block;width:12px;height:12px;border-radius:6px;margin-right:8px;background:#B9F36B"></i>묶인 장소 수</span>
+  </div>
 
   <sc-if value="{{mapEmpty}}" hint-placeholder-val="{{false}}">
   <div style="position:absolute;left:16px;right:16px;bottom:24px;background:#fff;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 12px rgba(23,23,25,.12)"><div style="font-weight:700">장소를 연결한 추억이 아직 없어요</div><div style="font-size:14px;color:#55565a">사진을 올릴 때 장소를 고르면 지도에 섬네일이 남아요.</div></div>
@@ -117,10 +120,9 @@ input{font-family:inherit}
   <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
     <div style="font-size:18px;font-weight:700;margin:24px 0 12px">{{g.label}}</div>
     <sc-for list="{{g.cards}}" as="c" hint-placeholder-count="2">
-      <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
-        <div style="width:64px;height:64px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
-        <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div>
-        <span style="display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}}">{{c.stLabel}}</span></div>
+      <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:12px;box-sizing:border-box">
+        <div style="width:64px;height:64px;border-radius:8px;flex:none;background:{{c.bg}}"></div>
+        <div style="min-width:0"><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px"><span style="font-size:12px;color:#55565a">{{c.sub}}</span><span style="display:inline-block;padding:0 8px;border-radius:8px;line-height:20px;font-size:12px;font-weight:700;background:{{c.stBg}};color:{{c.stFg}};box-shadow:inset 0 0 0 1px {{c.stBd}}">{{c.stLabel}}</span></div></div>
       </button>
     </sc-for>
   </sc-for>
@@ -130,25 +132,25 @@ input{font-family:inherit}
 <!-- ═════ 하단 탭 ═════ -->
 <div style="position:absolute;left:0;bottom:0;width:390px;height:64px;display:flex;border-top:1px solid #e1e2e4;background:#fff;z-index:20">
   <button type="button" onClick="{{goHome}}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:{{cHome}}">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/></svg>홈</button>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/></svg>홈</button>
   <button type="button" onClick="{{goMap}}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:{{cMap}}">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>추억 지도</button>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>추억 지도</button>
   <button type="button" onClick="{{goArchive}}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600;color:{{cArchive}}">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 15l4-4 4 4 3-3 5 5"/></svg>보관함</button>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 15l4-4 4 4 3-3 5 5"/></svg>보관함</button>
 </div>
 
 <!-- ═════ 이벤트 상세 ═════ -->
 <sc-if value="{{showDetail}}" hint-placeholder-val="{{false}}">
 <div style="position:absolute;left:0;top:0;width:390px;height:844px;background:#fff;z-index:40;overflow:auto;padding-bottom:96px;box-sizing:border-box">
   <div style="position:relative;height:200px;background:{{d.bg}}">
-    <button type="button" aria-label="뒤로" onClick="{{closeDetail}}" style="position:absolute;left:12px;top:12px;width:40px;height:40px;border-radius:20px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:#171719"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button type="button" aria-label="뒤로" onClick="{{closeDetail}}" style="position:absolute;left:12px;top:12px;width:44px;height:44px;border-radius:22px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:#171719"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
   </div>
   <div style="padding:0 16px">
     <div style="font-size:26px;line-height:1.3;font-weight:700;letter-spacing:-.02em;margin-top:16px">{{d.title}}</div>
-    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><span style="padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:{{d.stBg}};color:{{d.stFg}}">{{d.stLabel}}</span><span style="font-size:14px;color:#55565a">{{d.date}}</span></div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:8px"><span style="padding:0 8px;border-radius:8px;line-height:20px;font-size:12px;font-weight:700;background:{{d.stBg}};color:{{d.stFg}};box-shadow:inset 0 0 0 1px {{d.stBd}}">{{d.stLabel}}</span><span style="font-size:14px;color:#55565a">{{d.date}}</span></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
       <div style="display:flex;align-items:center">
-        <sc-for list="{{d.members}}" as="m" hint-placeholder-count="4"><span style="width:30px;height:30px;border-radius:15px;margin-right:-8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:{{m.bg}};color:{{m.fg}}">{{m.ch}}</span></sc-for>
+        <sc-for list="{{d.members}}" as="m" hint-placeholder-count="4"><span style="width:32px;height:32px;border-radius:16px;margin-right:-8px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:{{m.bg}};color:{{m.fg}}">{{m.ch}}</span></sc-for>
         <span style="margin-left:16px;font-size:12px;color:#55565a">{{d.count}}명</span>
       </div>
       <button type="button" onClick="{{copyInvite}}" style="height:36px;padding:0 14px;border:1px solid #e1e2e4;border-radius:10px;font-size:14px;font-weight:600">초대 링크 복사</button>
@@ -158,7 +160,7 @@ input{font-family:inherit}
     <sc-if value="{{d.hasPlaces}}" hint-placeholder-val="{{true}}">
     <div style="font-size:18px;font-weight:700;margin:24px 0 10px">다녀온 장소</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <sc-for list="{{d.places}}" as="pl" hint-placeholder-count="2"><button type="button" onClick="{{pl.onTap}}" style="height:32px;padding:0 12px;border-radius:16px;background:#EDEAFF;color:#3C319F;font-size:13px;font-weight:600">{{pl.name}}</button></sc-for>
+      <sc-for list="{{d.places}}" as="pl" hint-placeholder-count="2"><button type="button" onClick="{{pl.onTap}}" style="height:32px;padding:0 12px;border-radius:16px;background:#EDEAFF;color:#3C319F;font-size:14px;font-weight:600">{{pl.name}}</button></sc-for>
     </div>
     </sc-if>
 
@@ -166,7 +168,7 @@ input{font-family:inherit}
     <sc-if value="{{d.noEntries}}" hint-placeholder-val="{{false}}"><div style="margin-top:12px;padding:28px 16px;text-align:center;border:1px dashed #e1e2e4;border-radius:16px;color:#55565a">아직 기록이 없어요.<br>사진 한 장이면 충분해요.</div></sc-if>
     <sc-for list="{{d.entries}}" as="en" hint-placeholder-count="2">
       <div style="margin-top:20px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px"><span style="width:30px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:{{en.avBg}};color:{{en.avFg}}">{{en.ch}}</span><b>{{en.by}}</b><span style="font-size:12px;color:#55565a">· {{en.place}}</span></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px"><span style="width:32px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:{{en.avBg}};color:{{en.avFg}}">{{en.ch}}</span><b>{{en.by}}</b><span style="font-size:12px;color:#55565a">· {{en.place}}</span></div>
         <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px">
           <sc-for list="{{en.pics}}" as="ph" hint-placeholder-count="3"><div style="aspect-ratio:1/1;border-radius:8px;background:{{ph.bg}}"></div></sc-for>
         </div>
@@ -185,51 +187,51 @@ input{font-family:inherit}
 <div style="position:absolute;left:0;top:0;width:390px;height:844px;background:rgba(23,23,25,.52);z-index:60;display:flex;align-items:flex-end">
   <button type="button" aria-label="닫기" onClick="{{closeSheet}}" style="position:absolute;left:0;top:0;width:390px;height:844px"></button>
   <div style="position:relative;width:390px;max-height:740px;overflow:auto;background:#fff;border-radius:24px 24px 0 0;padding:8px 16px 28px;box-sizing:border-box">
-    <div style="width:36px;height:4px;border-radius:2px;background:#e1e2e4;margin:0 auto 14px"></div>
+    <div style="width:36px;height:4px;border-radius:2px;background:#e1e2e4;margin:0 auto 16px"></div>
 
     <sc-if value="{{showPlaceSheet}}" hint-placeholder-val="{{false}}">
-      <div style="font-size:20px;font-weight:700">{{ps.name}}</div>
+      <div style="font-size:18px;font-weight:700">{{ps.name}}</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;background:#F7F7F8;color:#55565a">{{ps.region}}</span><span style="font-size:14px;color:#55565a">{{ps.visits}}번 방문 · 사진 {{ps.photos}}장</span></div>
       <div style="font-size:12px;color:#55565a;margin-top:8px">함께한 친구 {{ps.mates}}</div>
-      <div style="display:flex;gap:6px;overflow:auto;margin:10px 0">
-        <sc-for list="{{ps.strip}}" as="ph" hint-placeholder-count="4"><div style="flex:none;width:84px;height:84px;border-radius:12px;background:{{ph.bg}}"></div></sc-for>
+      <div style="display:flex;gap:8px;overflow:auto;margin:12px 0">
+        <sc-for list="{{ps.strip}}" as="ph" hint-placeholder-count="4"><div style="flex:none;width:84px;height:84px;border-radius:8px;background:{{ph.bg}}"></div></sc-for>
       </div>
       <sc-for list="{{ps.events}}" as="c" hint-placeholder-count="2">
-        <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:10px;box-sizing:border-box">
-          <div style="width:56px;height:56px;border-radius:12px;flex:none;background:{{c.bg}}"></div>
+        <button type="button" onClick="{{c.onOpen}}" style="display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px;border:1px solid #e1e2e4;border-radius:16px;margin-bottom:12px;box-sizing:border-box">
+          <div style="width:56px;height:56px;border-radius:8px;flex:none;background:{{c.bg}}"></div>
           <div><div style="font-weight:700;font-size:16px">{{c.title}}</div><div style="font-size:12px;color:#55565a">{{c.sub}}</div></div>
         </button>
       </sc-for>
     </sc-if>
 
     <sc-if value="{{showNewSheet}}" hint-placeholder-val="{{false}}">
-      <div style="font-size:20px;font-weight:700;margin-bottom:4px">새 약속</div>
-      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">제목 (필수)</div>
-      <input type="text" maxlength="40" value="{{newTitle}}" onInput="{{onTitle}}" placeholder="예: 성수동 생일 모임" aria-label="약속 제목" style="width:100%;height:48px;box-sizing:border-box;border:1px solid #e1e2e4;border-radius:12px;padding:0 14px;font-size:15px;color:#171719;background:#fff">
-      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">날짜 (필수)</div>
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">새 약속</div>
+      <div style="font-size:14px;font-weight:600;color:#55565a;margin:16px 0 8px">제목 (필수)</div>
+      <input type="text" maxlength="40" value="{{newTitle}}" onInput="{{onTitle}}" placeholder="예: 성수동 생일 모임" aria-label="약속 제목" style="width:100%;height:48px;box-sizing:border-box;border:1px solid #e1e2e4;border-radius:12px;padding:0 16px;font-size:16px;color:#171719;background:#fff">
+      <div style="font-size:14px;font-weight:600;color:#55565a;margin:16px 0 8px">날짜 (필수)</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <sc-for list="{{dateChips}}" as="c" hint-placeholder-count="3"><button type="button" onClick="{{c.onTap}}" style="height:36px;padding:0 14px;border-radius:18px;font-size:13px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
+        <sc-for list="{{dateChips}}" as="c" hint-placeholder-count="3"><button type="button" onClick="{{c.onTap}}" style="height:32px;padding:0 16px;border-radius:16px;font-size:14px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
       </div>
-      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">예정 장소 (선택)</div>
+      <div style="font-size:14px;font-weight:600;color:#55565a;margin:16px 0 8px">예정 장소 (선택)</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <sc-for list="{{newPlaceChips}}" as="c" hint-placeholder-count="6"><button type="button" onClick="{{c.onTap}}" style="height:34px;padding:0 12px;border-radius:17px;font-size:13px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
+        <sc-for list="{{newPlaceChips}}" as="c" hint-placeholder-count="6"><button type="button" onClick="{{c.onTap}}" style="height:32px;padding:0 12px;border-radius:16px;font-size:14px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
       </div>
       <div style="font-size:12px;color:#55565a;margin:14px 0">비공개로 시작해요. 초대한 친구는 승인 후 참여할 수 있어요.</div>
       <button type="button" onClick="{{submitNew}}" style="width:100%;height:48px;border-radius:12px;background:#6155F5;color:#fff;font-size:16px;font-weight:700">만들기</button>
     </sc-if>
 
     <sc-if value="{{showAddSheet}}" hint-placeholder-val="{{false}}">
-      <div style="font-size:20px;font-weight:700;margin-bottom:4px">사진 추가</div>
-      <div style="font-size:13px;color:#55565a;margin-bottom:10px">갤러리에서 사진을 골라요 (데모용 샘플 · 여러 장 선택)</div>
-      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
-        <sc-for list="{{samples}}" as="s" hint-placeholder-count="8"><button type="button" aria-label="{{s.aria}}" onClick="{{s.onTap}}" style="position:relative;aspect-ratio:1/1;border-radius:10px;background:{{s.bg}};outline:{{s.outline}};outline-offset:-3px"><sc-if value="{{s.on}}" hint-placeholder-val="{{false}}"><span style="position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:10px;background:#6155F5;color:#fff;font-size:12px;font-weight:700;line-height:20px">{{s.n}}</span></sc-if></button></sc-for>
+      <div style="font-size:18px;font-weight:700;margin-bottom:4px">사진 추가</div>
+      <div style="font-size:14px;color:#55565a;margin-bottom:10px">갤러리에서 사진을 골라요 (데모용 샘플 · 여러 장 선택)</div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+        <sc-for list="{{samples}}" as="s" hint-placeholder-count="8"><button type="button" aria-label="{{s.aria}}" onClick="{{s.onTap}}" style="position:relative;aspect-ratio:1/1;border-radius:8px;background:{{s.bg}};outline:{{s.outline}};outline-offset:-3px"><sc-if value="{{s.on}}" hint-placeholder-val="{{false}}"><span style="position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:10px;background:#6155F5;color:#fff;font-size:12px;font-weight:700;line-height:20px">{{s.n}}</span></sc-if></button></sc-for>
       </div>
-      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">장소 연결 (선택) — 연결하면 지도에 섬네일 핀이 생겨요</div>
+      <div style="font-size:14px;font-weight:600;color:#55565a;margin:16px 0 8px">장소 연결 (선택) — 연결하면 지도에 섬네일 핀이 생겨요</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <sc-for list="{{addPlaceChips}}" as="c" hint-placeholder-count="6"><button type="button" onClick="{{c.onTap}}" style="height:34px;padding:0 12px;border-radius:17px;font-size:13px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
+        <sc-for list="{{addPlaceChips}}" as="c" hint-placeholder-count="6"><button type="button" onClick="{{c.onTap}}" style="height:32px;padding:0 12px;border-radius:16px;font-size:14px;font-weight:600;background:{{c.bg}};color:{{c.fg}}">{{c.label}}</button></sc-for>
       </div>
-      <div style="font-size:13px;font-weight:600;color:#55565a;margin:14px 0 6px">한 줄 메모 (선택)</div>
-      <input type="text" maxlength="80" value="{{addNote}}" onInput="{{onNote}}" placeholder="이날의 기억을 남겨요" aria-label="한 줄 메모" style="width:100%;height:48px;box-sizing:border-box;border:1px solid #e1e2e4;border-radius:12px;padding:0 14px;font-size:15px;color:#171719;background:#fff">
+      <div style="font-size:14px;font-weight:600;color:#55565a;margin:16px 0 8px">한 줄 메모 (선택)</div>
+      <input type="text" maxlength="80" value="{{addNote}}" onInput="{{onNote}}" placeholder="이날의 기억을 남겨요" aria-label="한 줄 메모" style="width:100%;height:48px;box-sizing:border-box;border:1px solid #e1e2e4;border-radius:12px;padding:0 16px;font-size:16px;color:#171719;background:#fff">
       <button type="button" onClick="{{submitAdd}}" style="width:100%;height:48px;border-radius:12px;background:#6155F5;color:#fff;font-size:16px;font-weight:700;margin-top:18px">{{addLabel}}</button>
     </sc-if>
   </div>
@@ -282,8 +284,8 @@ const SEED = [
   E('e11','속초 겨울바다','2026-11-21',['나','지현','민수'],[],'sokcho')
 ];
 const ST = {
-  UPCOMING:{l:'다가오는 약속',bg:'#EDEAFF',fg:'#3C319F'}, ONGOING:{l:'진행 중',bg:'#B9F36B',fg:'#1F1A51'},
-  MEMORY:{l:'추억',bg:'#F0F0F2',fg:'#55565a'}, PAST_EMPTY:{l:'사진 추가 대기',bg:'#F56F98',fg:'#1F1A51'}
+  UPCOMING:{l:'다가오는 약속',bg:'#EDEAFF',fg:'#3C319F',bd:'#EDEAFF'}, ONGOING:{l:'진행 중',bg:'#B9F36B',fg:'#1F1A51',bd:'#B9F36B'},
+  MEMORY:{l:'추억',bg:'#F0F0F2',fg:'#55565a',bd:'#F0F0F2'}, PAST_EMPTY:{l:'사진 추가 대기',bg:'#FFFFFF',fg:'#4D40C7',bd:'#6155F5'}
 };
 const AVC = [['#6155F5','#fff'],['#B9F36B','#1F1A51'],['#F56F98','#1F1A51'],['#3C319F','#fff']];
 const fd = (s) => { const a = s.split('-'); return a[0] + '.' + (+a[1]) + '.' + (+a[2]); };
@@ -309,14 +311,14 @@ class Component extends DCLogic {
     };
     const A0 = Object.values(agg(null)), A = Object.values(agg(s.filter));
     const cover = (e) => e.entries.length ? pic(e.entries[0].pics[0]) : FALL;
-    const card = (e) => { const k = statusOf(e), pl = {}; e.entries.forEach((x) => { if (x.pl) pl[x.pl] = 1; }); const np = Object.keys(pl).length; return { id:e.id, title:e.title, date:fd(e.date), bg:cover(e), sub: fd(e.date) + ' · ' + e.members.length + '명' + (np ? ' · ' + np + '곳' : ''), stLabel:ST[k].l, stBg:ST[k].bg, stFg:ST[k].fg, onOpen:() => set({ detail:e.id, sheet:null }) }; };
+    const card = (e) => { const k = statusOf(e), pl = {}; e.entries.forEach((x) => { if (x.pl) pl[x.pl] = 1; }); const np = Object.keys(pl).length; return { id:e.id, title:e.title, date:fd(e.date), bg:cover(e), sub: fd(e.date) + ' · ' + e.members.length + '명' + (np ? ' · ' + np + '곳' : ''), stLabel:ST[k].l, stBg:ST[k].bg, stFg:ST[k].fg, stBd:ST[k].bd, onOpen:() => set({ detail:e.id, sheet:null }) }; };
     const sorted = ev.slice().sort((a, b) => b.date.localeCompare(a.date));
     const regs = {}; A0.forEach((a) => { regs[PL[a.id].r] = 1; });
 
     // 지도
     let pins = [], mapT = 'translate(0px,0px) scale(1)';
     const openPlace = (id) => () => set({ sheet:'place', sheetPlace:id });
-    const mk = (x, y, a, label, big, aria, onTap) => ({ left:x, top:y, sz:big ? 68 : 56, bg:pic(a.thumb), hasBadge:big || Object.keys(a.evs).length > 1, badge:big ? String(big) : String(Object.keys(a.evs).length), badgeBg:big ? '#B9F36B' : '#6155F5', badgeFg:big ? '#1F1A51' : '#fff', hasLabel:!!label, label, aria, onTap });
+    const mk = (x, y, a, label, big, aria, onTap) => ({ left:x, top:y, sz:big ? 72 : 56, bg:pic(a.thumb), hasBadge:big || Object.keys(a.evs).length > 1, badge:big ? String(big) : String(Object.keys(a.evs).length), badgeBg:big ? '#B9F36B' : '#6155F5', badgeFg:big ? '#1F1A51' : '#fff', hasLabel:!!label, label, aria, onTap });
     if (!s.region) {
       const gr = {}; A.forEach((a) => { (gr[PL[a.id].r] = gr[PL[a.id].r] || []).push(a); });
       Object.keys(gr).forEach((r) => {
@@ -355,7 +357,7 @@ class Component extends DCLogic {
     let d = { title:'', date:'', bg:FALL, stLabel:'', stBg:'', stFg:'', members:[], count:0, hasPlaces:false, places:[], entries:[], noEntries:false };
     if (de) {
       const k = statusOf(de), pl = []; de.entries.forEach((x) => { if (x.pl && pl.indexOf(x.pl) < 0) pl.push(x.pl); });
-      d = { title:de.title, date:fd(de.date), bg:cover(de), stLabel:ST[k].l, stBg:ST[k].bg, stFg:ST[k].fg,
+      d = { title:de.title, date:fd(de.date), bg:cover(de), stLabel:ST[k].l, stBg:ST[k].bg, stFg:ST[k].fg, stBd:ST[k].bd,
         members:de.members.map((m, i) => ({ ch:m[0], bg:AVC[i % 4][0], fg:AVC[i % 4][1] })), count:de.members.length,
         hasPlaces:pl.length > 0, places:pl.map((id) => ({ name:PL[id].n, onTap:() => set({ detail:null, tab:'map', region:PL[id].r, sheet:'place', sheetPlace:id }) })),
         noEntries:de.entries.length === 0,
@@ -373,7 +375,7 @@ class Component extends DCLogic {
 
     return {
       showHome:s.tab === 'home' && !de, showMap:s.tab === 'map', showArchive:s.tab === 'archive', showDetail:!!de, d,
-      cHome:s.tab === 'home' ? '#6155F5' : '#9a9ba1', cMap:s.tab === 'map' ? '#6155F5' : '#9a9ba1', cArchive:s.tab === 'archive' ? '#6155F5' : '#9a9ba1',
+      cHome:s.tab === 'home' ? '#6155F5' : '#55565a', cMap:s.tab === 'map' ? '#6155F5' : '#55565a', cArchive:s.tab === 'archive' ? '#6155F5' : '#55565a',
       goHome:() => set({ tab:'home', detail:null, sheet:null }), goMap:() => set({ tab:'map', detail:null, sheet:null, region:null }), goArchive:() => set({ tab:'archive', detail:null, sheet:null }),
       statRegions:Object.keys(regs).length, statPlaces:A0.length, statPhotos:A0.reduce((t, a) => t + a.n, 0),
       upcoming:ev.filter((e) => ['UPCOMING', 'ONGOING'].indexOf(statusOf(e)) >= 0).sort((a, b) => a.date.localeCompare(b.date)).map(card), hasUpcoming:ev.some((e) => ['UPCOMING', 'ONGOING'].indexOf(statusOf(e)) >= 0),
