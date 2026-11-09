@@ -28,7 +28,7 @@ main{max-width:1100px;margin:auto;padding:32px 22px}
 .week,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .week{margin:24px 0 7px;color:#a3aaa0;text-align:center;font-size:12px}
 .day{min-height:68px;border:0;border-radius:10px;background:#f8f9f5;text-align:left;padding:7px;color:#647060;position:relative;overflow:hidden}
-.day.has{background:#e8f0e5}.day.plan{box-shadow:inset 0 0 0 1.5px #d9b45a}
+.day .dots{display:flex;gap:4px;margin-top:8px}.day .d{width:6px;height:6px;border-radius:50%;display:inline-block}.day .d.m{background:#5a8062}.day .d.b{background:#d9b45a}
 .day.selected{outline:2px solid #6b9273}
 .day img{width:100%;height:38px;object-fit:cover;border-radius:5px;margin-top:3px}
 .day .count{font-size:10px;color:#5a8062;display:block}
@@ -137,7 +137,7 @@ dialog input:not([type=file]),dialog select{width:100%}
           <div class="nav"><button id="prev" aria-label="이전 달">‹</button><button id="next" aria-label="다음 달">›</button></div></div>
         <div class="week"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
         <div class="grid" id="calendar"></div>
-        <p class="muted">날짜를 눌러 그날의 기록을 살펴보세요. 노란 테두리는 잡혀 있는 만남이에요.</p>
+        <p class="muted">날짜를 눌러 그날의 기록을 살펴보세요. 초록 점은 기록, 노란 점은 잡혀 있는 만남이에요.</p>
       </section>
       <section class="card">
         <div class="cardhead"><div><div class="eyebrow">OUR MOMENTS</div><h2 id="listTitle">이달의 기록</h2></div><button class="subtle" id="all">전체 보기</button></div>
@@ -269,7 +269,7 @@ function render(){
   const blanks=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
   $('calendar').innerHTML=Array(blanks).fill('<div class="empty"></div>').join('')+Array.from({length:days},(_,i)=>{
     const d=`${year}-${String(month+1).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`,list=items.filter(e=>e.date===d),photo=list.find(e=>e.photo),pl=plans.find(p=>p.date===d);
-    return `<button class="day ${list.length?'has':''} ${pl?'plan':''} ${selected===d?'selected':''}" data-date="${d}" aria-label="${d}, 기록 ${list.length}개${pl?', 만남 예정':''}">${i+1}${photo?`<img src="${photo.photo}" alt="">`:list.length?`<span class="count">기록 ${list.length}</span>`:''}${pl&&!photo?`<span class="pmark">📅 ${esc(pl.time)}</span>`:''}</button>`}).join('');
+    return `<button class="day ${selected===d?'selected':''}" data-date="${d}" aria-label="${d}, 기록 ${list.length}개${pl?', 만남 예정':''}"><span class="n">${i+1}</span><span class="dots">${list.length?'<i class="d m"></i>':''}${pl?'<i class="d b"></i>':''}</span></button>`}).join('');
   const shown=selected?items.filter(e=>e.date===selected):items;
   $('listTitle').textContent=selected?`${Number(selected.slice(5,7))}월 ${Number(selected.slice(8))}일의 기록`:'이달의 기록';
   $('entries').innerHTML=shown.length?shown.map(entryHTML).join(''):'<p class="muted">아직 기록이 없어요. 소중한 순간을 남겨볼까요?</p>';
