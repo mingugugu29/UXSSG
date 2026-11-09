@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>모아 — 우리 모임의 추억</title>
+<style>
+:root{font-family:system-ui,'Malgun Gothic',sans-serif;color:#26352c;background:#f5f4ee}*{box-sizing:border-box}body{margin:0}main{max-width:900px;margin:auto;padding:28px 16px 80px}header{background:#315d4b;color:white;border-radius:24px;padding:30px;margin-bottom:20px}h1{margin:0 0 6px;font-size:2rem}h2{font-size:1.25rem;margin:0 0 18px}p{line-height:1.6}section,.card{background:white;border:1px solid #e2e7de;border-radius:20px;padding:22px;margin:16px 0;box-shadow:0 5px 20px #1835220b}label{display:block;font-weight:650;margin:14px 0 6px}input,textarea,button{font:inherit}input,textarea{width:100%;border:1px solid #ccd7cb;border-radius:10px;padding:11px;background:#fff}textarea{min-height:90px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.expense{display:grid;grid-template-columns:1fr 140px auto;gap:8px;align-items:end}button{border:0;border-radius:10px;padding:11px 15px;background:#315d4b;color:white;cursor:pointer}button.secondary{background:#e8eee8;color:#315d4b}button.danger{background:#f6e8e4;color:#a44234}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.muted{color:#68766c;font-size:.9rem}.photos{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.photo{position:relative}.photo img{width:110px;height:110px;object-fit:cover;border-radius:12px}.photo button{position:absolute;right:4px;top:4px;padding:3px 8px;background:#26352cbb}.card h3{margin:0}.card .photos img{width:100px;height:100px;object-fit:cover;border-radius:10px}.empty{text-align:center;padding:30px;color:#68766c}@media(max-width:600px){.row,.expense{grid-template-columns:1fr}header{padding:24px}}
+</style>
+<style>.card>button{margin:8px 8px 8px 0}.card>div{border-top:1px solid #e2e7de;margin-top:12px;padding-top:12px}.card>div[hidden]{display:none}.card h4{margin:22px 0 8px}.diary{background:#f4f7f2;border-radius:12px;padding:14px;margin:10px 0}.diary p{margin:7px 0 0;white-space:pre-wrap}.card form input,.card form textarea{margin:6px 0}.card form{margin-top:20px}</style>
+</head>
+<body><main><header><h1>모아</h1><div>우리 모임의 사진과 이야기를 한곳에</div></header>
+<section><h2>새 모임 기록</h2><form id="form"><div class="row"><div><label for="title">모임 이름 *</label><input id="title" required maxlength="80" placeholder="예: 가을 한강 피크닉"></div><div><label for="date">날짜 *</label><input id="date" type="date" required></div></div><div class="row"><div><label for="place">장소</label><input id="place" maxlength="100" placeholder="어디에서 만났나요?"></div><div><label for="people">함께한 사람</label><input id="people" maxlength="150" placeholder="이름을 쉼표로 구분"></div></div><label for="review">모임 후기</label><textarea id="review" maxlength="2000" placeholder="오늘 가장 기억에 남는 순간은?"></textarea><label for="photos">사진 추가</label><input id="photos" type="file" accept="image/*" multiple><div id="photoPreview" class="photos"></div><h3>사용한 비용</h3><div class="expense"><div><label for="item">항목</label><input id="item" placeholder="예: 저녁 식사"></div><div><label for="amount">금액 (원)</label><input id="amount" type="number" min="0" step="1" placeholder="0"></div><button type="button" id="addExpense">추가</button></div><ul id="expenseList"></ul><strong id="draftTotal">합계 0원</strong><div class="actions"><button type="submit">모임 저장</button></div><p id="message" role="status" class="muted"></p></form></section>
+<section><h2>우리의 모임</h2><div id="records"></div></section><p class="muted">이 시제품은 같은 브라우저에서 돌아가며 일기를 남길 수 있습니다. 친구 초대나 기기 간 공유는 아직 지원하지 않습니다.</p></main>
+<script>
+const key='moa-meetings-v1', $=id=>document.getElementById(id);
+let meetings=[];try{meetings=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(meetings))meetings=[]}catch{meetings=[]}
+if(localStorage.getItem(key)===null){
+  const samplePhoto=(sky,ground,sun)=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="480" height="320" viewBox="0 0 480 320"><rect width="480" height="320" fill="${sky}"/><circle cx="375" cy="75" r="42" fill="${sun}"/><path d="M0 218 Q115 170 235 220 T480 210 V320 H0Z" fill="${ground}"/><path d="M0 270 Q130 235 260 270 T480 260 V320 H0Z" fill="#ffffff44"/></svg>`);
+  meetings=[
+    {id:'sample-picnic',title:'한강 노을 피크닉',date:'2026-10-24',place:'여의도 한강공원',people:'민지, 서준, 지우, 나',review:'돗자리 펴고 노을을 보며 오래 이야기했다. 다음에는 보드게임도 가져오기로!',photos:[samplePhoto('#f6ad83','#668c68','#ffe6a4')],expenses:[{item:'치킨과 음료',amount:42000},{item:'간식',amount:18000}],diaries:[{id:'sample-diary-1',author:'민지',body:'노을이 예뻐서 사진을 계속 찍었다. 다 같이 웃던 순간이 오래 기억날 것 같다.'},{id:'sample-diary-2',author:'서준',body:'치킨보다 친구들이랑 수다 떠는 시간이 더 좋았다.'}]},
+    {id:'sample-trip',title:'가을 바다 당일치기',date:'2026-09-12',place:'강릉 안목해변',people:'민지, 서준, 나',review:'바닷바람이 쌀쌀했지만 커피 들고 걸었던 시간이 제일 좋았다.',photos:[samplePhoto('#a9d7e8','#74b4c4','#fff1bf')],expenses:[{item:'기차표',amount:90000},{item:'점심',amount:39000},{item:'카페',amount:24000}],diaries:[{id:'sample-diary-3',author:'나',body:'기차에서 졸다가 바다를 보자마자 잠이 깼다. 다음에는 1박 하고 싶다.'}]}
+  ];
+  try{localStorage.setItem(key,JSON.stringify(meetings))}catch{}
+}
+const sampleDiaries={'sample-picnic':[{id:'sample-diary-1',author:'민지',body:'노을이 예뻐서 사진을 계속 찍었다. 다 같이 웃던 순간이 오래 기억날 것 같다.'},{id:'sample-diary-2',author:'서준',body:'치킨보다 친구들이랑 수다 떠는 시간이 더 좋았다.'}],'sample-trip':[{id:'sample-diary-3',author:'나',body:'기차에서 졸다가 바다를 보자마자 잠이 깼다. 다음에는 1박 하고 싶다.'}]};
+if(meetings.some(m=>sampleDiaries[m.id]&&!m.diaries)){meetings=meetings.map(m=>sampleDiaries[m.id]&&!m.diaries?{...m,diaries:sampleDiaries[m.id]}:m);try{localStorage.setItem(key,JSON.stringify(meetings))}catch{}}
+let photos=[],expenses=[];const won=n=>Number(n).toLocaleString('ko-KR')+'원';
+function el(tag,text,cls){const node=document.createElement(tag);if(text!=null)node.textContent=text;if(cls)node.className=cls;return node}
+function renderDraft(){const wrap=$('photoPreview');wrap.replaceChildren();photos.forEach((src,i)=>{const box=el('div',null,'photo'),img=el('img'),button=el('button','×');img.src=src;img.alt='첨부 사진 '+(i+1);button.type='button';button.setAttribute('aria-label','사진 '+(i+1)+' 삭제');button.onclick=()=>{photos.splice(i,1);renderDraft()};box.append(img,button);wrap.append(box)});const list=$('expenseList');list.replaceChildren();expenses.forEach((cost,i)=>{const li=el('li',cost.item+' · '+won(cost.amount)+' '),button=el('button','삭제','secondary');button.type='button';button.onclick=()=>{expenses.splice(i,1);renderDraft()};li.append(button);list.append(li)});$('draftTotal').textContent='합계 '+won(expenses.reduce((sum,e)=>sum+e.amount,0))}
+function save(next){try{localStorage.setItem(key,JSON.stringify(next));meetings=next;return true}catch{alert('브라우저 저장 공간이 부족해 저장하지 못했습니다.');return false}}
+function render(){
+  const wrap=$('records');wrap.replaceChildren();
+  if(!meetings.length){wrap.append(el('div','아직 기록이 없어요. 첫 모임을 남겨 보세요!','empty'));return}
+  [...meetings].sort((a,b)=>b.date.localeCompare(a.date)).forEach(m=>{
+    const card=el('article',null,'card'),head=el('h3',m.title),summary=el('p',[m.date,m.place,m.people].filter(Boolean).join(' · '),'muted');
+    const open=el('button','자세히 보기');open.setAttribute('aria-expanded','false');
+    const detail=el('div');detail.hidden=true;
+    open.onclick=()=>{detail.hidden=!detail.hidden;open.textContent=detail.hidden?'자세히 보기':'접기';open.setAttribute('aria-expanded',String(!detail.hidden))};
+    if(m.review){detail.append(el('h4','모임 이야기'),el('p',m.review))}
+    if(m.photos?.length){detail.append(el('h4','사진'));const gallery=el('div',null,'photos');m.photos.forEach((src,i)=>{const img=el('img');img.src=src;img.alt=m.title+' 사진 '+(i+1);gallery.append(img)});detail.append(gallery)}
+    detail.append(el('h4','사용한 비용'));
+    const total=m.expenses?.reduce((sum,e)=>sum+e.amount,0)||0;detail.append(el('strong','합계 '+won(total)));
+    if(m.expenses?.length){const list=el('ul');m.expenses.forEach(e=>list.append(el('li',e.item+' · '+won(e.amount))));detail.append(list)}
+    detail.append(el('h4','각자의 일기'));
+    const diaries=el('div');(m.diaries||[]).forEach(d=>{const entry=el('div',null,'diary');entry.append(el('strong',d.author),el('p',d.body));diaries.append(entry)});
+    if(!m.diaries?.length)diaries.append(el('p','아직 일기가 없어요. 첫 번째 이야기를 남겨 주세요.','muted'));
+    detail.append(diaries);
+    const form=el('form'),author=el('input'),body=el('textarea'),submit=el('button','일기 남기기'),status=el('p',null,'muted');
+    author.required=true;author.maxLength=30;author.placeholder='내 이름';author.setAttribute('aria-label','일기 작성자 이름');
+    body.required=true;body.maxLength=2000;body.placeholder='오늘의 이야기를 자유롭게 적어 주세요';body.setAttribute('aria-label','그날의 일기');
+    form.append(author,body,submit,status);
+    form.onsubmit=e=>{e.preventDefault();const name=author.value.trim(),story=body.value.trim();if(!name||!story){status.textContent='이름과 일기를 모두 입력해 주세요.';return}const updated={...m,diaries:[...(meetings.find(x=>x.id===m.id).diaries||[]),{id:crypto.randomUUID(),author:name,body:story}]};if(save(meetings.map(x=>x.id===m.id?updated:x))){const entry=el('div',null,'diary');entry.append(el('strong',name),el('p',story));if(!m.diaries?.length)diaries.replaceChildren();diaries.append(entry);m.diaries=updated.diaries;form.reset();status.textContent='일기를 저장했어요.'}};
+    detail.append(form);
+    const remove=el('button','기록 삭제','danger');remove.onclick=()=>{if(confirm('이 모임 기록을 삭제할까요?')&&save(meetings.filter(x=>x.id!==m.id)))render()};
+    card.append(head,summary,open,detail,remove);wrap.append(card)
+  })
+}
+$('date').value=new Date().toLocaleDateString('sv-SE');$('addExpense').onclick=()=>{const item=$('item').value.trim(),raw=$('amount').value,amount=Number(raw);if(!item||raw===''||!Number.isSafeInteger(amount)||amount<0){$('message').textContent='비용 항목과 0원 이상의 정수 금액을 입력해 주세요.';return}expenses.push({item,amount});$('item').value='';$('amount').value='';$('message').textContent='';renderDraft()};
+$('photos').onchange=async e=>{for(const file of e.target.files){if(!file.type.startsWith('image/'))continue;const src=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});photos.push(src)}e.target.value='';renderDraft()};
+$('form').onsubmit=e=>{e.preventDefault();const title=$('title').value.trim(),date=$('date').value;if(!title||!date){$('message').textContent='모임 이름과 날짜를 입력해 주세요.';return}const record={id:crypto.randomUUID(),title,date,place:$('place').value.trim(),people:$('people').value.trim(),review:$('review').value.trim(),photos:[...photos],expenses:[...expenses]};try{localStorage.setItem(key,JSON.stringify([record,...meetings]))}catch{$('message').textContent='브라우저 저장 공간이 부족해 저장하지 못했습니다. 사진 수를 줄여 다시 시도해 주세요.';return}meetings.unshift(record);e.target.reset();$('date').value=new Date().toLocaleDateString('sv-SE');photos=[];expenses=[];renderDraft();render();$('message').textContent='모임 기록을 저장했어요.'};renderDraft();render();
+</script></body></html>
