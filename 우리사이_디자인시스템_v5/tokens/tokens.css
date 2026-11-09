@@ -1,0 +1,55 @@
+/* 우리사이 v.5 Design Tokens — Figma 변수(우리사이/Primitives · Color · Spacing · Radius)와 1:1 대응 */
+:root {
+  /* Primitives */
+  --pink-base: #F2B8B8;   --yellow-base: #F4D58D; --blue-base: #B9D8E8;
+  --lavender-base: #D5C2E8; --mint-base: #BFE3D0;
+  --pink-tint: #FCEDED;   --yellow-tint: #FDF5DD; --blue-tint: #EAF4F9;
+  --lavender-tint: #F3EDF9; --mint-tint: #E8F5EE;
+  --pink-ink: #9A4A4A;    --yellow-ink: #7A5E14;  --blue-ink: #2F6380; --mint-ink: #2F6B4D;
+  --neutral-ink: #3A3346; --neutral-sub: #6C6577; --neutral-muted: #8C8796;
+  --neutral-line: #ECE6EF; --neutral-input-line: #E3DBE9;
+  --neutral-bg: #FAF8F6;  --neutral-appbar: #FFFDFB; --neutral-white: #FFFFFF; --neutral-dark: #2F2A36;
+  --purple-accent: #7E63A8;
+  --brand-kakao: #FEE500; --brand-kakao-ink: #191600;
+  --red-badge: #E0605A;   --red-like: #C4573F;
+
+  /* Semantic — background */
+  --bg-app: var(--neutral-bg);       --bg-surface: var(--neutral-white);
+  --bg-appbar: var(--neutral-appbar); --bg-dark: var(--neutral-dark);
+  --bg-accent: var(--purple-accent);
+  --bg-pink: var(--pink-base); --bg-yellow: var(--yellow-base); --bg-blue: var(--blue-base);
+  --bg-lavender: var(--lavender-base); --bg-mint: var(--mint-base);
+  --bg-pink-tint: var(--pink-tint); --bg-yellow-tint: var(--yellow-tint); --bg-blue-tint: var(--blue-tint);
+  --bg-lavender-tint: var(--lavender-tint); --bg-mint-tint: var(--mint-tint);
+  --bg-kakao: var(--brand-kakao); --bg-badge: var(--red-badge);
+
+  /* Semantic — text */
+  --text-primary: var(--neutral-ink); --text-secondary: var(--neutral-sub); --text-muted: var(--neutral-muted);
+  --text-on-accent: var(--neutral-white); --text-accent: var(--purple-accent);
+  --text-pink: var(--pink-ink); --text-yellow: var(--yellow-ink); --text-blue: var(--blue-ink); --text-mint: var(--mint-ink);
+  --text-kakao: var(--brand-kakao-ink); --text-like: var(--red-like);
+
+  /* Semantic — border / icon */
+  --border-default: var(--neutral-line); --border-input: var(--neutral-input-line);
+  --border-pink: var(--pink-base); --border-yellow: var(--yellow-base);
+  --border-blue: var(--blue-base); --border-lavender: var(--lavender-base);
+  --icon-default: var(--neutral-sub); --icon-muted: var(--neutral-muted);
+  --icon-accent: var(--purple-accent); --icon-on-accent: var(--neutral-white);
+
+  /* Spacing */
+  --space-2xs: 4px; --space-xs: 6px; --space-sm: 8px; --space-md: 12px;
+  --space-lg: 16px; --space-xl: 20px; --space-2xl: 24px;
+
+  /* Radius */
+  --radius-sm: 8px; --radius-md: 10px; --radius-lg: 14px; --radius-xl: 18px;
+  --radius-2xl: 20px; --radius-sheet: 26px; --radius-full: 999px;
+
+  /* Shadow (effect styles) */
+  --shadow-card: 0 5px 20px rgba(91, 74, 122, 0.05);
+  --shadow-fab: 0 6px 18px rgba(126, 99, 168, 0.33);
+  --shadow-sheet: 0 -10px 40px rgba(58, 51, 70, 0.13);
+
+  /* Typography — Figma는 Noto Sans KR, 원본 HTML은 Malgun Gothic */
+  --font-sans: "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  --lh-base: 1.45;
+}
