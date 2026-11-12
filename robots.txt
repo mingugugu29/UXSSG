@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://deploy-project-7ffb0b.netlify.app/sitemap.xml
